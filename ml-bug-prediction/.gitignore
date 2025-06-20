@@ -1,0 +1,89 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Build artifacts
+*.whl
+*.tar.gz
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Code quality
+.mypy_cache/
+.flake8
+
+# Virtual environments
+venv/
+venv_local/
+env/
+ENV/
+
+# Environment variables
+.env
+*.env
+
+# Flask
+instance/
+.webassets-cache
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+config/jira_config.json
+config/projects_config.json
+*.log
+test_*.py
+debug_*.py
+
+# Data files (optional - remove if you want to include sample data)
+data/raw/
+data/processed/
+notebooks/data/
+
+# Temporary files
+*.tmp
+*.temp 

@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - ML Bug Risk Analysis Dashboard</title>  
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .navigation {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .nav-item {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            background: white;
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+        
+        .nav-item:hover {
+            background: #e9ecef;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        /* Special styling for reset buttons */
+        .btn-danger[onclick*="reset"] {
+            background: linear-gradient(135deg, #dc3545, #a71e2a);
+            border: 2px solid #dc3545;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-danger[onclick*="reset"]:hover {
+            background: linear-gradient(135deg, #c82333, #922b36);
+            border-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-danger[onclick*="reset"]:before {
+            content: "⚠️";
+            margin-right: 5px;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            color: #856404;
+        }
+        
+        .projects-list {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .project-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .project-item:last-child {
+            border-bottom: none;
+        }
+        
+        .project-info {
+            flex: 1;
+        }
+        
+        .project-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .project-key {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .connection-test {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .test-result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .test-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .test-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .back-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .form-help {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .config-summary {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .summary-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .summary-value {
+            color: #666;
+        }
+        
+        /* Project Selection Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-content {
+            padding: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .selection-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .discovered-projects-list {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+
+        .discovered-project-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .discovered-project-item:last-child {
+            border-bottom: none;
+        }
+
+        .discovered-project-item:hover {
+            background: #f8f9fa;
+        }
+
+        .discovered-project-item.selected {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+        }
+
+        .project-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .discovered-project-info {
+            flex: 1;
+        }
+
+        .discovered-project-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .discovered-project-key {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .discovered-project-description {
+            color: #888;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Search functionality styling */
+        .search-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #projectSearchInput {
+            flex: 1;
+            padding: 12px 40px 12px 16px;
+            border: 2px solid #ced4da;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        #projectSearchInput:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-clear-btn {
+            position: absolute;
+            right: 8px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .search-clear-btn:hover {
+            background: #5a6268;
+            transform: scale(1.1);
+        }
+
+        .search-clear-btn.visible {
+            display: flex;
+        }
+
+        .search-results-info {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .discovered-project-item.hidden {
+            display: none;
+        }
+
+        .discovered-project-item.highlighted {
+            background: #fff3cd !important;
+            border-left: 4px solid #ffc107 !important;
+        }
+
+        .highlight {
+            background: #ffeb3b;
+            font-weight: bold;
+            padding: 1px 2px;
+            border-radius: 2px;
+        }
+
+        /* Confirmation Modal Styling */
+        .confirmation-modal {
+            max-width: 600px;
+            animation: confirmationSlideIn 0.3s ease-out;
+        }
+
+        @keyframes confirmationSlideIn {
+            from {
+                transform: scale(0.9) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .confirmation-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .confirmation-icon {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: iconPulse 2s infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .confirmation-header h3 {
+            margin: 0;
+            flex: 1;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .confirmation-message {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #856404;
+        }
+
+        .confirmation-details {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .details-header {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .confirmation-details ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style-type: none;
+        }
+
+        .confirmation-details li {
+            margin-bottom: 8px;
+            position: relative;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .confirmation-details li:before {
+            content: "•";
+            color: #dc3545;
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+
+        .confirmation-warning {
+            background: linear-gradient(135deg, #f8d7da, #f1c2c7);
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .warning-text {
+            color: #721c24;
+            font-weight: bold;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .confirmation-actions {
+            justify-content: center;
+            gap: 20px;
+            padding-top: 25px;
+        }
+
+        .confirmation-actions .btn {
+            min-width: 120px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 25px;
+        }
+
+        .confirmation-actions .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border: none;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .confirmation-actions .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333, #a71e2a);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .confirmation-actions .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .confirmation-actions .btn-secondary:hover {
+            background: linear-gradient(135deg, #5a6268, #494f54);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+
+            .modal-container {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .selection-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .selection-controls .btn {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .search-section {
+                padding: 10px;
+            }
+
+            #projectSearchInput {
+                padding: 10px 35px 10px 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .search-results-info {
+                font-size: 12px;
+                margin-top: 8px;
+            }
+
+            .confirmation-modal {
+                max-width: 95%;
+                margin: 10px;
+            }
+
+            .confirmation-header {
+                padding: 20px;
+                gap: 10px;
+            }
+
+            .confirmation-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .confirmation-header h3 {
+                font-size: 18px;
+            }
+
+            .confirmation-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .confirmation-actions .btn {
+                min-width: auto;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+        /* Footer Styling */
+        .footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .footer p {
+            margin: 0;
+            font-size: 0.9em;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-button">← Back to Dashboard</a>
+            <h1>⚙️ Settings</h1>
+            <p>Configure JIRA connection and manage project settings</p>
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-item active" onclick="showTab('jira')">🔗 JIRA Configuration</button>
+            <button class="nav-item" onclick="showTab('projects')">📂 Project Management</button>
+            <button class="nav-item" onclick="showTab('summary')">📋 Configuration Summary</button>
+        </div>
+        
+        <div class="content">
+            <!-- Alerts Container -->
+            <div id="alertContainer"></div>
+            
+            <!-- JIRA Configuration Tab -->
+            <div id="jira" class="tab-content active">
+                <h2>🔗 JIRA Configuration</h2>
+                <p style="margin-bottom: 30px; color: #666;">Configure your JIRA server connection details. This information is required to fetch bug data and project information.</p>
+                
+                <form id="jiraConfigForm">
+                    <div class="form-group">
+                        <label for="jiraUrl">JIRA Server URL *</label>
+                        <input type="url" id="jiraUrl" name="jira_url" placeholder="https://your-company.atlassian.net" required>
+                        <div class="form-help">Enter your JIRA server URL (e.g., https://your-company.atlassian.net)</div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="jiraUsername">Username/Email *</label>
+                            <input type="text" id="jiraUsername" name="username" placeholder="your.email@company.com" required>
+                            <div class="form-help">Your JIRA login email address</div>
+                        </div>
+                        
+                                            <div class="form-group">
+                        <label for="jiraToken">API Token *</label>
+                        <input type="password" id="jiraToken" name="api_token" placeholder="Your JIRA API token" required>
+                        <div class="form-help">
+                            Generate from JIRA → Account Settings → Security → API tokens<br>
+                            <small id="tokenStatus" style="color: #666;"></small>
+                        </div>
+                    </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="environment">Environment</label>
+                            <select id="environment" name="environment">
+                                <option value="Production">Production</option>
+                                <option value="Staging">Staging</option>
+                                <option value="Development">Development</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="maxResults">Max Results per Query</label>
+                            <input type="number" id="maxResults" name="max_results" value="1000" min="100" max="5000">
+                            <div class="form-help">Number of issues to fetch per JIRA query (100-5000)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" onclick="testJiraConnection()">🔍 Test Connection</button>
+                        <button type="submit" class="btn btn-primary">💾 Save JIRA Configuration</button>
+                        <button type="button" class="btn btn-danger" onclick="resetJiraConfiguration()">Reset JIRA Settings</button>
+                    </div>
+                </form>
+                
+                <div class="connection-test" id="connectionTest" style="display: none;">
+                    <h4>🔍 Connection Test</h4>
+                    <p>Testing connection to JIRA server...</p>
+                    <div id="testResult"></div>
+                </div>
+            </div>
+            
+            <!-- Projects Management Tab -->
+            <div id="projects" class="tab-content">
+                <h2>📂 Project Management</h2>
+                <p style="margin-bottom: 30px; color: #666;">Add and manage JIRA projects that will be available for analysis in the dashboard.</p>
+                
+                <form id="projectForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectName">Project Name *</label>
+                            <input type="text" id="projectName" name="project_name" placeholder="e.g., Android App" required>
+                            <div class="form-help">Display name for the project in the dashboard</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="projectKey">JIRA Project Key *</label>
+                            <input type="text" id="projectKey" name="project_key" placeholder="e.g., AND" required style="text-transform: uppercase;">
+                            <div class="form-help">JIRA project key (usually 2-4 uppercase letters)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectDescription">Description (Optional)</label>
+                        <textarea id="projectDescription" name="description" rows="3" placeholder="Brief description of the project"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">➕ Add Project</button>
+                        <button type="button" class="btn btn-secondary" onclick="discoverProjectsForSelection()">🔍 Auto-Discover Projects</button>
+                        <button type="button" class="btn btn-danger" onclick="resetProjectsConfiguration()">Reset All Projects</button>
+                    </div>
+                </form>
+                
+                <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+                
+                <h3>📋 Configured Projects</h3>
+                <div id="projectsList" class="projects-list">
+                    <!-- Projects will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Configuration Summary Tab -->
+            <div id="summary" class="tab-content">
+                <h2>📋 Configuration Summary</h2>
+                <p style="margin-bottom: 30px; color: #666;">Review your current configuration settings and system status.</p>
+                
+                <div class="config-summary">
+                    <h4>🔗 JIRA Connection</h4>
+                    <div id="jiraSummary">
+                        <!-- JIRA config summary will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="config-summary">
+                    <h4>📂 Projects Configuration</h4>
+                    <div id="projectsSummary">
+                        <!-- Projects summary will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" onclick="exportConfiguration()">📤 Export Configuration</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 Import Configuration</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importConfiguration(this)">
+                    <button type="button" class="btn btn-danger" onclick="resetAllConfiguration()">Reset All Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Project Selection Modal -->
+    <div id="projectSelectionModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>🔍 Select Projects to Add</h3>
+                <button class="modal-close" onclick="closeProjectSelectionModal()">✕</button>
+            </div>
+            <div class="modal-content">
+                <p>Select the JIRA projects you want to add to your dashboard for analysis:</p>
+                
+                <!-- Search Section -->
+                <div class="search-section">
+                    <div class="search-input-group">
+                        <input type="text" id="projectSearchInput" placeholder="🔍 Search projects by name or key..." onkeyup="filterProjects()" onkeydown="handleSearchKeydown(event)" autocomplete="off">
+                        <button class="search-clear-btn" onclick="clearProjectSearch()" title="Clear search">✕</button>
+                    </div>
+                    <div class="search-results-info">
+                        <span id="searchResultsCount">Showing all projects</span>
+                    </div>
+                </div>
+                
+                <div class="selection-controls">
+                    <button class="btn btn-small btn-secondary" onclick="selectAllProjects()">Select All</button>
+                    <button class="btn btn-small btn-secondary" onclick="deselectAllProjects()">Deselect All</button>
+                    <button class="btn btn-small btn-secondary" onclick="selectAllVisible()">Select Visible</button>
+                    <span id="selectionCount" style="margin-left: 1rem; font-weight: bold;">0 selected</span>
+                </div>
+                <div id="discoveredProjectsList" class="discovered-projects-list">
+                    <!-- Projects will be loaded here -->
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="addSelectedProjects()">➕ Add Selected Projects</button>
+                    <button class="btn btn-secondary" onclick="closeProjectSelectionModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Project Modal -->
+    <div id="editProjectModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>✏️ Edit Project</h3>
+                <button class="modal-close" onclick="closeEditProjectModal()">✕</button>
+            </div>
+            <div class="modal-content">
+                <form id="editProjectForm">
+                    <input type="hidden" id="editProjectId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editProjectName">Project Name *</label>
+                            <input type="text" id="editProjectName" name="project_name" required>
+                            <div class="form-help">Display name for the project in the dashboard</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editProjectKey">JIRA Project Key *</label>
+                            <input type="text" id="editProjectKey" name="project_key" required style="text-transform: uppercase;" readonly>
+                            <div class="form-help">JIRA project key cannot be changed (linked to JIRA)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editProjectDescription">Description (Optional)</label>
+                        <textarea id="editProjectDescription" name="description" rows="3" placeholder="Brief description of the project"></textarea>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeEditProjectModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container confirmation-modal">
+            <div class="modal-header confirmation-header">
+                <div class="confirmation-icon">
+                    <div id="confirmationIcon">⚠️</div>
+                </div>
+                <h3 id="confirmationTitle">Confirm Action</h3>
+                <button class="modal-close" onclick="closeConfirmationModal()">✕</button>
+            </div>
+            <div class="modal-content">
+                <div class="confirmation-message">
+                    <div id="confirmationMessage"></div>
+                </div>
+                <div class="confirmation-details" id="confirmationDetails" style="display: none;">
+                    <div class="details-header">This action will:</div>
+                    <ul id="confirmationList"></ul>
+                </div>
+                <div class="confirmation-warning" id="confirmationWarning" style="display: none;">
+                    <div class="warning-text"></div>
+                </div>
+                <div class="modal-actions confirmation-actions">
+                    <button type="button" class="btn btn-danger" id="confirmationConfirm">Confirm</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeConfirmationModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load content for the selected tab
+            if (tabName === 'projects') {
+                loadProjects();
+            } else if (tabName === 'summary') {
+                loadConfigurationSummary();
+            }
+        }
+        
+        // Alert system
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            alertContainer.appendChild(alert);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            }, 5000);
+        }
+        
+        // JIRA Configuration Form
+        document.getElementById('jiraConfigForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const config = Object.fromEntries(formData);
+            
+            // Don't send empty API token if it's masked
+            const apiTokenField = document.getElementById('jiraToken');
+            if (apiTokenField.value === '***') {
+                delete config.api_token; // Keep existing token
+            }
+            
+            try {
+                const response = await fetch('/api/settings/jira', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('JIRA configuration saved successfully!', 'success');
+                } else {
+                    showAlert(`Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Network error: ${error.message}`, 'error');
+            }
+        });
+        
+        // Project Form
+        document.getElementById('projectForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const project = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/api/settings/projects', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(project)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('Project added successfully!', 'success');
+                    this.reset();
+                    loadProjects();
+                } else {
+                    showAlert(`Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Network error: ${error.message}`, 'error');
+            }
+        });
+        
+        // Test JIRA Connection
+        async function testJiraConnection() {
+            const form = document.getElementById('jiraConfigForm');
+            const formData = new FormData(form);
+            const config = Object.fromEntries(formData);
+            
+            const testDiv = document.getElementById('connectionTest');
+            const resultDiv = document.getElementById('testResult');
+            
+            testDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div style="padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">🔄 Testing connection...</div>';
+            
+            try {
+                const response = await fetch('/api/settings/jira/test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    let successHtml = `<div class="test-success">✅ Connection successful!<br>
+                        👤 User: ${result.user_name || 'Unknown'}<br>
+                        📧 Email: ${result.user_email || 'Unknown'}<br>
+                        📊 Found ${result.projects_count || 0} total projects</div>`;
+                    
+                    // Show option to add new projects if any are available
+                    if (result.can_auto_discover && result.new_projects_count > 0) {
+                        successHtml += `
+                            <div style="margin-top: 15px; padding: 15px; background: #e7f3ff; border: 1px solid #bee5eb; border-radius: 6px;">
+                                <h4 style="margin: 0 0 10px 0; color: #0c5460;">🔍 New Projects Discovered</h4>
+                                <p style="margin: 0 0 10px 0;">Found ${result.new_projects_count} new projects that can be added to your dashboard:</p>`;
+                        
+                        // Show sample of new projects
+                        if (result.new_projects_sample && result.new_projects_sample.length > 0) {
+                            successHtml += `<ul style="margin: 0 0 15px 20px;">`;
+                            result.new_projects_sample.forEach(project => {
+                                successHtml += `<li><strong>${project.key}</strong>: ${project.name}</li>`;
+                            });
+                            if (result.new_projects_count > result.new_projects_sample.length) {
+                                successHtml += `<li>... and ${result.new_projects_count - result.new_projects_sample.length} more</li>`;
+                            }
+                            successHtml += `</ul>`;
+                        }
+                        
+                        successHtml += `
+                                <button class="btn btn-primary" onclick="addAllDiscoveredProjects()" style="margin-right: 10px;">
+                                    ➕ Add All ${result.new_projects_count} Projects
+                                </button>
+                                <button class="btn btn-secondary" onclick="showProjectsTab()">
+                                    📂 Manage Projects Manually
+                                </button>
+                            </div>`;
+                    }
+                    
+                    resultDiv.innerHTML = successHtml;
+                } else {
+                    resultDiv.innerHTML = `<div class="test-error">❌ Connection failed: ${result.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="test-error">❌ Network error: ${error.message}</div>`;
+            }
+        }
+        
+        // Load Projects
+        async function loadProjects() {
+            try {
+                const response = await fetch('/api/settings/projects');
+                const result = await response.json();
+                
+                const projectsList = document.getElementById('projectsList');
+                
+                if (result.success && result.projects.length > 0) {
+                    projectsList.innerHTML = result.projects.map(project => {
+                        const isEnabled = project.enabled_for_analysis === true; // Fixed logic: === true means enabled
+                        const statusBadge = isEnabled ? 
+                            '<span style="background: #28a745; color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; margin-left: 10px;">✓ Active Analysis</span>' :
+                            '<span style="background: #6c757d; color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; margin-left: 10px;">○ Not in Analysis</span>';
+                        
+                        const actionButtons = isEnabled ?
+                            `<button class="btn btn-small btn-secondary" onclick="editProject('${project.id}')">Edit</button>
+                             <button class="btn btn-small btn-warning" onclick="disableProject('${project.id}')">Disable</button>
+                             <button class="btn btn-small btn-danger" onclick="removeProject('${project.id}')">Remove</button>` :
+                            `<button class="btn btn-small btn-success" onclick="enableProject('${project.id}')">Add to Analysis</button>
+                             <button class="btn btn-small btn-danger" onclick="removeProject('${project.id}')">Remove</button>`;
+                        
+                        return `
+                            <div class="project-item" style="${isEnabled ? 'border-left: 3px solid #28a745;' : 'opacity: 0.7; border-left: 3px solid #6c757d;'}">
+                                <div class="project-info">
+                                    <div class="project-name">${project.name}${statusBadge}</div>
+                                    <div class="project-key">Key: ${project.jira_key}</div>
+                                    ${project.description ? `<div style="font-size: 14px; color: #666; margin-top: 4px;">${project.description}</div>` : ''}
+                                </div>
+                                <div class="project-actions">
+                                    ${actionButtons}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    projectsList.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">No projects configured yet.</div>';
+                }
+            } catch (error) {
+                showAlert(`Error loading projects: ${error.message}`, 'error');
+            }
+        }
+        
+        // Remove Project from Dashboard Analysis
+        async function removeProject(projectId) {
+            confirmAction('removeProject', async () => {
+                try {
+                    const response = await fetch(`/api/settings/projects/${projectId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showAlert('Project removed from dashboard successfully!', 'success');
+                        loadProjects();
+                    } else {
+                        showAlert(`Error: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    showAlert(`Network error: ${error.message}`, 'error');
+                }
+            });
+        }
+        
+        // Global variables for project selection
+        let discoveredProjects = [];
+        let selectedProjectIds = new Set();
+
+        // Discover Projects for Selection
+        async function discoverProjectsForSelection() {
+            const loadBtn = event.target;
+            const originalText = loadBtn.innerHTML;
+            loadBtn.innerHTML = '🔄 Discovering...';
+            loadBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/settings/discover-projects');
+                const result = await response.json();
+                
+                if (result.success) {
+                    discoveredProjects = result.projects;
+                    selectedProjectIds.clear();
+                    showProjectSelectionModal();
+                } else {
+                    showAlert(`Discovery failed: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Network error: ${error.message}`, 'error');
+            } finally {
+                loadBtn.innerHTML = originalText;
+                loadBtn.disabled = false;
+            }
+        }
+
+        // Show Project Selection Modal
+        function showProjectSelectionModal() {
+            const modal = document.getElementById('projectSelectionModal');
+            const projectsList = document.getElementById('discoveredProjectsList');
+            
+            // Filter to only show new projects that aren't already configured
+            const availableProjects = discoveredProjects.filter(p => p.is_new);
+            
+            if (availableProjects.length === 0) {
+                showAlert('All discovered projects are already configured. No new projects found.', 'info');
+                return;
+            }
+            
+            // Render available projects
+            projectsList.innerHTML = availableProjects.map(project => `
+                <div class="discovered-project-item" data-project-id="${project.key}">
+                    <input type="checkbox" class="project-checkbox" 
+                           id="project_${project.key}" 
+                           onchange="toggleProjectSelection('${project.key}')">
+                    <div class="discovered-project-info">
+                        <div class="discovered-project-name">${project.name || project.key}</div>
+                        <div class="discovered-project-key">Key: ${project.key}</div>
+                        ${project.description ? `<div class="discovered-project-description">${project.description}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            updateSelectionCount();
+            
+            // Initialize search results info
+            const resultsInfo = document.getElementById('searchResultsCount');
+            resultsInfo.textContent = `Showing all ${availableProjects.length} projects`;
+            resultsInfo.style.color = '#6c757d';
+            
+            modal.style.display = 'flex';
+            
+            // Auto-focus on search input for better UX
+            setTimeout(() => {
+                document.getElementById('projectSearchInput').focus();
+            }, 100);
+        }
+
+        // Close Project Selection Modal
+        function closeProjectSelectionModal() {
+            document.getElementById('projectSelectionModal').style.display = 'none';
+            selectedProjectIds.clear();
+            clearProjectSearch(); // Clear search when modal closes
+        }
+
+        // Toggle Project Selection
+        function toggleProjectSelection(projectKey) {
+            const checkbox = document.getElementById(`project_${projectKey}`);
+            const item = document.querySelector(`[data-project-id="${projectKey}"]`);
+            
+            if (checkbox.checked) {
+                selectedProjectIds.add(projectKey);
+                item.classList.add('selected');
+            } else {
+                selectedProjectIds.delete(projectKey);
+                item.classList.remove('selected');
+            }
+            
+            updateSelectionCount();
+        }
+
+        // Select All Projects
+        function selectAllProjects() {
+            document.querySelectorAll('.project-checkbox').forEach(checkbox => {
+                if (!checkbox.checked) {
+                    checkbox.checked = true;
+                    toggleProjectSelection(checkbox.id.replace('project_', ''));
+                }
+            });
+        }
+
+        // Deselect All Projects
+        function deselectAllProjects() {
+            document.querySelectorAll('.project-checkbox').forEach(checkbox => {
+                if (checkbox.checked) {
+                    checkbox.checked = false;
+                    toggleProjectSelection(checkbox.id.replace('project_', ''));
+                }
+            });
+        }
+
+        // Update Selection Count
+        function updateSelectionCount() {
+            document.getElementById('selectionCount').textContent = `${selectedProjectIds.size} selected`;
+        }
+
+        // Search functionality
+        function filterProjects() {
+            const searchInput = document.getElementById('projectSearchInput');
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const clearBtn = document.querySelector('.search-clear-btn');
+            const projectItems = document.querySelectorAll('.discovered-project-item');
+            const resultsInfo = document.getElementById('searchResultsCount');
+            
+            // Show/hide clear button
+            if (searchTerm.length > 0) {
+                clearBtn.classList.add('visible');
+            } else {
+                clearBtn.classList.remove('visible');
+            }
+            
+            let visibleCount = 0;
+            let matchingProjects = [];
+            
+            projectItems.forEach(item => {
+                const projectName = item.querySelector('.discovered-project-name').textContent.toLowerCase();
+                const projectKey = item.querySelector('.discovered-project-key').textContent.toLowerCase();
+                const projectDescription = item.querySelector('.discovered-project-description');
+                const description = projectDescription ? projectDescription.textContent.toLowerCase() : '';
+                
+                // Check if search term matches name, key, or description
+                const matches = projectName.includes(searchTerm) || 
+                               projectKey.includes(searchTerm) || 
+                               description.includes(searchTerm);
+                
+                if (matches) {
+                    item.classList.remove('hidden');
+                    visibleCount++;
+                    matchingProjects.push(item);
+                    
+                    // Highlight matching terms
+                    highlightSearchTerms(item, searchTerm);
+                } else {
+                    item.classList.add('hidden');
+                    // Remove any existing highlights
+                    removeHighlights(item);
+                }
+            });
+            
+            // Update results info
+            if (searchTerm.length > 0) {
+                if (visibleCount === 0) {
+                    resultsInfo.textContent = 'No projects found matching your search';
+                    resultsInfo.style.color = '#dc3545';
+                } else if (visibleCount === 1) {
+                    resultsInfo.textContent = `Found 1 project matching "${searchTerm}"`;
+                    resultsInfo.style.color = '#28a745';
+                } else {
+                    resultsInfo.textContent = `Found ${visibleCount} projects matching "${searchTerm}"`;
+                    resultsInfo.style.color = '#28a745';
+                }
+            } else {
+                resultsInfo.textContent = `Showing all ${projectItems.length} projects`;
+                resultsInfo.style.color = '#6c757d';
+                // Remove all highlights when search is cleared
+                projectItems.forEach(item => removeHighlights(item));
+            }
+        }
+
+        function highlightSearchTerms(item, searchTerm) {
+            if (!searchTerm) return;
+            
+            const nameElement = item.querySelector('.discovered-project-name');
+            const keyElement = item.querySelector('.discovered-project-key');
+            const descElement = item.querySelector('.discovered-project-description');
+            
+            // Highlight in project name
+            highlightInElement(nameElement, searchTerm);
+            
+            // Highlight in project key
+            highlightInElement(keyElement, searchTerm);
+            
+            // Highlight in description if exists
+            if (descElement) {
+                highlightInElement(descElement, searchTerm);
+            }
+        }
+
+        function highlightInElement(element, searchTerm) {
+            if (!element) return;
+            
+            const originalText = element.getAttribute('data-original-text') || element.textContent;
+            if (!element.getAttribute('data-original-text')) {
+                element.setAttribute('data-original-text', originalText);
+            }
+            
+            const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+            const highlightedText = originalText.replace(regex, '<span class="highlight">$1</span>');
+            element.innerHTML = highlightedText;
+        }
+
+        function removeHighlights(item) {
+            const elements = item.querySelectorAll('.discovered-project-name, .discovered-project-key, .discovered-project-description');
+            elements.forEach(element => {
+                const originalText = element.getAttribute('data-original-text');
+                if (originalText) {
+                    element.textContent = originalText;
+                }
+            });
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function clearProjectSearch() {
+            const searchInput = document.getElementById('projectSearchInput');
+            const clearBtn = document.querySelector('.search-clear-btn');
+            
+            searchInput.value = '';
+            clearBtn.classList.remove('visible');
+            
+            // Show all projects and remove highlights
+            const projectItems = document.querySelectorAll('.discovered-project-item');
+            projectItems.forEach(item => {
+                item.classList.remove('hidden');
+                removeHighlights(item);
+            });
+            
+            // Update results info
+            const resultsInfo = document.getElementById('searchResultsCount');
+            resultsInfo.textContent = `Showing all ${projectItems.length} projects`;
+            resultsInfo.style.color = '#6c757d';
+            
+            // Focus back on search input
+            searchInput.focus();
+        }
+
+        // Select all visible (filtered) projects
+        function selectAllVisible() {
+            const visibleItems = document.querySelectorAll('.discovered-project-item:not(.hidden)');
+            visibleItems.forEach(item => {
+                const checkbox = item.querySelector('.project-checkbox');
+                const projectKey = item.getAttribute('data-project-id');
+                
+                if (!checkbox.checked) {
+                    checkbox.checked = true;
+                    selectedProjectIds.add(projectKey);
+                    item.classList.add('selected');
+                }
+            });
+            
+            updateSelectionCount();
+        }
+
+        // Handle keyboard shortcuts in search
+        function handleSearchKeydown(event) {
+            switch(event.key) {
+                case 'Escape':
+                    clearProjectSearch();
+                    break;
+                case 'Enter':
+                    event.preventDefault();
+                    // If only one project is visible, auto-select it
+                    const visibleItems = document.querySelectorAll('.discovered-project-item:not(.hidden)');
+                    if (visibleItems.length === 1) {
+                        const checkbox = visibleItems[0].querySelector('.project-checkbox');
+                        const projectKey = visibleItems[0].getAttribute('data-project-id');
+                        
+                        if (!checkbox.checked) {
+                            checkbox.checked = true;
+                            selectedProjectIds.add(projectKey);
+                            visibleItems[0].classList.add('selected');
+                            updateSelectionCount();
+                        }
+                    }
+                    break;
+            }
+        }
+
+        // Add global keyboard handler for modal
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('projectSelectionModal');
+            if (modal.style.display === 'flex') {
+                if (event.key === 'Escape') {
+                    closeProjectSelectionModal();
+                }
+            }
+        });
+
+        // Add Selected Projects
+        async function addSelectedProjects() {
+            if (selectedProjectIds.size === 0) {
+                showAlert('Please select at least one project to add.', 'warning');
+                return;
+            }
+            
+            const addBtn = event.target;
+            const originalText = addBtn.innerHTML;
+            addBtn.innerHTML = '➕ Adding...';
+            addBtn.disabled = true;
+            
+            let addedCount = 0;
+            let errors = [];
+            
+            for (const projectKey of selectedProjectIds) {
+                const project = discoveredProjects.find(p => p.key === projectKey);
+                if (!project) continue;
+                
+                try {
+                    const response = await fetch('/api/settings/projects', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            project_key: project.key,
+                            project_name: project.name || project.key,
+                            description: project.description || '',
+                            enabled_for_analysis: false  // Don't enable by default
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        addedCount++;
+                    } else {
+                        errors.push(`${project.key}: ${result.message}`);
+                    }
+                } catch (error) {
+                    errors.push(`${project.key}: ${error.message}`);
+                }
+            }
+            
+            // Show results
+            if (addedCount > 0) {
+                showAlert(`Successfully added ${addedCount} project(s). Use "Add to Analysis" button to enable them for dashboard analysis.`, 'success');
+                loadProjects();
+                closeProjectSelectionModal();
+            }
+            
+            if (errors.length > 0) {
+                showAlert(`Some projects failed to add: ${errors.join(', ')}`, 'warning');
+            }
+            
+            addBtn.innerHTML = originalText;
+            addBtn.disabled = false;
+        }
+
+        // Enable Project for Analysis
+        async function enableProject(projectId) {
+            confirmAction('enableProject', async () => {
+                try {
+                    const response = await fetch(`/api/settings/projects/${projectId}/enable`, {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showAlert('Project is now Active Analysis! 🚀', 'success');
+                        loadProjects();
+                    } else {
+                        showAlert(`Error: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    showAlert(`Network error: ${error.message}`, 'error');
+                }
+            });
+        }
+
+        // Disable Project for Analysis
+        async function disableProject(projectId) {
+            confirmAction('disableProject', async () => {
+                try {
+                    const response = await fetch(`/api/settings/projects/${projectId}/disable`, {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showAlert('Project status changed to Not in Analysis ⏸️', 'success');
+                        loadProjects();
+                    } else {
+                        showAlert(`Error: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    showAlert(`Network error: ${error.message}`, 'error');
+                }
+            });
+        }
+
+        // Edit Project Function
+        async function editProject(projectId) {
+            try {
+                // Get project details from the current list
+                const projectItems = document.querySelectorAll('.project-item');
+                let currentProject = null;
+                
+                projectItems.forEach(item => {
+                    const editBtn = item.querySelector(`button[onclick="editProject('${projectId}')"]`);
+                    if (editBtn) {
+                        const projectInfo = item.querySelector('.project-info');
+                        const nameDiv = projectInfo.querySelector('.project-name');
+                        const keyDiv = projectInfo.querySelector('.project-key');
+                        const descDiv = projectInfo.querySelector('div[style*="color: #666"]');
+                        
+                        currentProject = {
+                            id: projectId,
+                            name: nameDiv ? nameDiv.textContent.trim() : '',
+                            key: keyDiv ? keyDiv.textContent.replace('Key: ', '').trim() : '',
+                            description: descDiv ? descDiv.textContent.trim() : ''
+                        };
+                    }
+                });
+                
+                if (!currentProject) {
+                    showAlert('Error: Project not found', 'error');
+                    return;
+                }
+                
+                // Populate the edit form
+                document.getElementById('editProjectId').value = currentProject.id;
+                document.getElementById('editProjectName').value = currentProject.name;
+                document.getElementById('editProjectKey').value = currentProject.key;
+                document.getElementById('editProjectDescription').value = currentProject.description;
+                
+                // Show the modal
+                document.getElementById('editProjectModal').style.display = 'flex';
+                
+            } catch (error) {
+                showAlert(`Error loading project: ${error.message}`, 'error');
+            }
+        }
+
+        // Close Edit Project Modal
+        function closeEditProjectModal() {
+            document.getElementById('editProjectModal').style.display = 'none';
+            document.getElementById('editProjectForm').reset();
+        }
+
+        // Edit Project Form Handler
+        document.getElementById('editProjectForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const projectData = Object.fromEntries(formData);
+            const projectId = document.getElementById('editProjectId').value;
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '💾 Saving...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/settings/projects/${projectId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(projectData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('Project updated successfully!', 'success');
+                    closeEditProjectModal();
+                    loadProjects(); // Refresh the projects list
+                } else {
+                    showAlert(`Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Network error: ${error.message}`, 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Load Configuration Summary
+        async function loadConfigurationSummary() {
+            try {
+                const response = await fetch('/api/settings/summary');
+                const result = await response.json();
+                
+                if (result.success) {
+                    // JIRA Summary
+                    const jiraSummary = document.getElementById('jiraSummary');
+                    const jiraConfig = result.jira_config;
+                    
+                    if (jiraConfig) {
+                        jiraSummary.innerHTML = `
+                            <div class="summary-item">
+                                <span class="summary-label">Server URL:</span>
+                                <span class="summary-value">${jiraConfig.jira_url || 'Not configured'}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Username:</span>
+                                <span class="summary-value">${jiraConfig.username || 'Not configured'}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Environment:</span>
+                                <span class="summary-value">${jiraConfig.environment || 'Production'}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Status:</span>
+                                <span class="summary-value">${jiraConfig.jira_url ? '✅ Configured' : '❌ Not configured'}</span>
+                            </div>
+                        `;
+                    } else {
+                        jiraSummary.innerHTML = '<div style="color: #666; font-style: italic;">JIRA not configured yet.</div>';
+                    }
+                    
+                    // Projects Summary
+                    const projectsSummary = document.getElementById('projectsSummary');
+                    const projects = result.projects;
+                    
+                    if (projects && projects.length > 0) {
+                        projectsSummary.innerHTML = `
+                            <div class="summary-item">
+                                <span class="summary-label">Total Projects:</span>
+                                <span class="summary-value">${projects.length}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Project Keys:</span>
+                                <span class="summary-value">${projects.map(p => p.jira_key).join(', ')}</span>
+                            </div>
+                        `;
+                    } else {
+                        projectsSummary.innerHTML = '<div style="color: #666; font-style: italic;">No projects configured yet.</div>';
+                    }
+                }
+            } catch (error) {
+                showAlert(`Error loading configuration: ${error.message}`, 'error');
+            }
+        }
+        
+        // Export Configuration
+        async function exportConfiguration() {
+            try {
+                const response = await fetch('/api/settings/export');
+                const blob = await response.blob();
+                
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `dashboard-config-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                showAlert('Configuration exported successfully!', 'success');
+            } catch (error) {
+                showAlert(`Error exporting configuration: ${error.message}`, 'error');
+            }
+        }
+        
+        // Import Configuration
+        async function importConfiguration(input) {
+            if (!input.files[0]) return;
+            
+            const formData = new FormData();
+            formData.append('config_file', input.files[0]);
+            
+            try {
+                const response = await fetch('/api/settings/import', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('Configuration imported successfully!', 'success');
+                    location.reload(); // Reload to reflect changes
+                } else {
+                    showAlert(`Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Network error: ${error.message}`, 'error');
+            }
+            
+            input.value = ''; // Clear file input
+        }
+
+        // Reset All Configuration (Global Reset)
+        async function resetAllConfiguration() {
+            confirmAction('resetAll', async () => {
+                try {
+                    const response = await fetch('/api/settings/reset-all', {
+                        method: 'POST'
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showAlert('🔄 ALL configuration reset successfully! Your dashboard is now in factory default state.', 'success');
+                        
+                        // Clear all forms
+                        document.getElementById('jiraConfigForm').reset();
+                        document.getElementById('projectForm').reset();
+                        
+                        // Reset UI elements
+                        document.getElementById('tokenStatus').textContent = '⚠️ Please configure JIRA connection';
+                        document.getElementById('tokenStatus').style.color = '#ffc107';
+                        document.getElementById('connectionTest').style.display = 'none';
+                        
+                        // Reload data
+                        loadProjects();
+                        loadConfigurationSummary();
+                    } else {
+                        showAlert(`❌ Reset failed: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    showAlert(`❌ Network error: ${error.message}`, 'error');
+                }
+            });
+        }
+        
+        // Add all discovered projects
+        async function addAllDiscoveredProjects() {
+            try {
+                showAlert('Adding all discovered projects...', 'warning');
+                
+                const response = await fetch('/api/settings/projects/discover', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert(`Successfully added ${result.added_count} new projects!`, 'success');
+                    loadProjects(); // Refresh the projects list
+                    showProjectsTab(); // Switch to projects tab
+                } else {
+                    showAlert(`Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Network error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Switch to projects tab
+        function showProjectsTab() {
+            showTab('projects');
+        }
+
+        // Confirmation Modal Functions
+        function showConfirmationModal(config) {
+            const modal = document.getElementById('confirmationModal');
+            const title = document.getElementById('confirmationTitle');
+            const icon = document.getElementById('confirmationIcon');
+            const message = document.getElementById('confirmationMessage');
+            const details = document.getElementById('confirmationDetails');
+            const detailsList = document.getElementById('confirmationList');
+            const warning = document.getElementById('confirmationWarning');
+            const confirmBtn = document.getElementById('confirmationConfirm');
+
+            // Set title and icon
+            title.textContent = config.title || 'Confirm Action';
+            icon.textContent = config.icon || '⚠️';
+
+            // Set message
+            message.textContent = config.message || '';
+
+            // Set details list
+            if (config.details && config.details.length > 0) {
+                details.style.display = 'block';
+                detailsList.innerHTML = config.details.map(detail => `<li>${detail}</li>`).join('');
+            } else {
+                details.style.display = 'none';
+            }
+
+            // Set warning
+            if (config.warning) {
+                warning.style.display = 'block';
+                warning.querySelector('.warning-text').textContent = config.warning;
+            } else {
+                warning.style.display = 'none';
+            }
+
+            // Set confirm button
+            confirmBtn.textContent = config.confirmText || 'Confirm';
+            confirmBtn.className = `btn ${config.confirmClass || 'btn-danger'}`;
+
+            // Set click handler
+            confirmBtn.onclick = () => {
+                closeConfirmationModal();
+                if (config.onConfirm) config.onConfirm();
+            };
+
+            // Show modal
+            modal.style.display = 'flex';
+        }
+
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+
+        // Enhanced confirmation helper for different types
+        function confirmAction(type, callback) {
+            const configs = {
+                resetJira: {
+                    title: 'Reset JIRA Configuration',
+                    icon: '🔄',
+                    message: 'This will permanently delete all JIRA configuration settings.',
+                    details: [
+                        'Server URL will be cleared',
+                        'Username/Email will be removed',
+                        'API Token will be deleted',
+                        'Environment settings will be reset',
+                        'Connection preferences will be lost'
+                    ],
+                    warning: '⚠️ This action cannot be undone!',
+                    confirmText: 'Reset JIRA Settings',
+                    confirmClass: 'btn-danger',
+                    onConfirm: callback
+                },
+                resetProjects: {
+                    title: 'Reset All Projects',
+                    icon: '🗂️',
+                    message: 'This will permanently Remove ALL project configurations.',
+                    details: [
+                        'All manually added projects will be removed',
+                        'All auto-discovered projects will be deleted',
+                        'Project descriptions and settings will be lost',
+                        'Analysis enablement status will be reset',
+                        'Dashboard will show NO PROJECTS until reconfigured'
+                    ],
+                    warning: '⚠️ This action cannot be undone!',
+                    confirmText: 'Reset All Projects',
+                    confirmClass: 'btn-danger',
+                    onConfirm: callback
+                },
+                resetAll: {
+                    title: 'Reset All Configuration',
+                    icon: '🚨',
+                    message: 'This will completely reset your dashboard to factory defaults.',
+                    details: [
+                        'JIRA configuration will be completely cleared',
+                        'ALL project configurations will be deleted',
+                        'Dashboard will be disconnected from JIRA',
+                        'All settings will return to default values',
+                        'You will need to reconfigure everything'
+                    ],
+                    warning: '⚠️ THIS WILL DELETE EVERYTHING!',
+                    confirmText: 'Reset Everything',
+                    confirmClass: 'btn-danger',
+                    onConfirm: callback
+                },
+                enableProject: {
+                    title: 'Add Project to Analysis',
+                    icon: '✅',
+                    message: 'This will activate the project for bug analysis in your dashboard.',
+                    details: [
+                        'Project will appear in the dashboard dropdown',
+                        'Bug data will be analyzed for this project',
+                        'Project will be included in trend analysis',
+                        'Status will change to "Active Analysis"',
+                        'Edit button will become available for configuration'
+                    ],
+                    warning: null,
+                    confirmText: 'Add to Analysis',
+                    confirmClass: 'btn-success',
+                    onConfirm: callback
+                },
+                disableProject: {
+                    title: 'Disable Analysis',
+                    icon: '⏸️',
+                    message: 'This will disable this project from active analysis.',
+                    details: [
+                        'Project will not appear in dashboard dropdown',
+                        'Bug analysis will stop for this project',
+                        'Project configuration will be preserved',
+                        'Status will change to "Not in Analysis"',
+                        'You can click "Add to Analysis" to re-enable it'
+                    ],
+                    warning: null,
+                    confirmText: 'Disable Analysis',
+                    confirmClass: 'btn-warning',
+                    onConfirm: callback
+                },
+                removeProject: {
+                    title: 'Remove Project Configuration',
+                    icon: '🗑️',
+                    message: 'This will permanently delete the project configuration.',
+                    details: [
+                        'Project will be removed from dashboard',
+                        'All project settings will be lost',
+                        'Project description will be deleted',
+                        'The JIRA project itself will NOT be affected'
+                    ],
+                    warning: '⚠️ Configuration will be permanently lost!',
+                    confirmText: 'Remove Project',
+                    confirmClass: 'btn-danger',
+                    onConfirm: callback
+                }
+            };
+
+            if (configs[type]) {
+                showConfirmationModal(configs[type]);
+            } else {
+                // Fallback to basic confirm
+                if (confirm('Are you sure?')) {
+                    callback();
+                }
+            }
+        }
+
+        // Reset JIRA Configuration
+        async function resetJiraConfiguration() {
+            confirmAction('resetJira', async () => {
+                try {
+                    const response = await fetch('/api/settings/jira/reset', {
+                        method: 'POST'
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showAlert('🔄 JIRA configuration reset successfully! Please reconfigure your JIRA connection.', 'success');
+                        
+                        // Clear the form
+                        document.getElementById('jiraConfigForm').reset();
+                        document.getElementById('tokenStatus').textContent = '⚠️ Please configure JIRA connection';
+                        document.getElementById('tokenStatus').style.color = '#ffc107';
+                        
+                        // Hide connection test results
+                        document.getElementById('connectionTest').style.display = 'none';
+                    } else {
+                        showAlert(`❌ Reset failed: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    showAlert(`❌ Network error: ${error.message}`, 'error');
+                }
+            });
+        }
+
+        // Reset Projects Configuration
+        async function resetProjectsConfiguration() {
+            confirmAction('resetProjects', async () => {
+                try {
+                    const response = await fetch('/api/settings/projects/reset', {
+                        method: 'POST'
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showAlert('🔄 All project configurations reset successfully! Add projects to start using the dashboard.', 'success');
+                        
+                        // Clear the project form
+                        document.getElementById('projectForm').reset();
+                        
+                        // Reload the projects list (which should now be empty)
+                        loadProjects();
+                    } else {
+                        showAlert(`❌ Reset failed: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    showAlert(`❌ Network error: ${error.message}`, 'error');
+                }
+            });
+        }
+        
+        // Load current configuration on page load
+        window.addEventListener('load', function() {
+            loadProjects();
+            loadConfigurationSummary();
+            
+            // Load current JIRA config
+            fetch('/api/settings/jira')
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success && result.config) {
+                        const config = result.config;
+                        document.getElementById('jiraUrl').value = config.jira_url || '';
+                        document.getElementById('jiraUsername').value = config.username || '';
+                        document.getElementById('environment').value = config.environment || 'Production';
+                        document.getElementById('maxResults').value = config.max_results || 1000;
+                        
+                        // Set masked token if it exists
+                        const tokenField = document.getElementById('jiraToken');
+                        const tokenStatus = document.getElementById('tokenStatus');
+                        
+                        if (config.api_token && config.api_token !== '***') {
+                            tokenField.value = '***';
+                            tokenField.setAttribute('data-has-token', 'true');
+                            tokenField.placeholder = 'API token is saved (masked for security)';
+                            tokenStatus.textContent = '✅ API token is saved and secured';
+                            tokenStatus.style.color = '#28a745';
+                        } else {
+                            tokenStatus.textContent = '⚠️ Please enter your API token';
+                            tokenStatus.style.color = '#ffc107';
+                        }
+                        
+                        // Handle token field focus to allow new token entry
+                        tokenField.addEventListener('focus', function() {
+                            if (this.value === '***') {
+                                this.value = '';
+                                this.placeholder = 'Enter new API token (leave blank to keep current)';
+                                tokenStatus.textContent = '💡 Enter new token or leave blank to keep current';
+                                tokenStatus.style.color = '#17a2b8';
+                            }
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading JIRA config:', error));
+        });
+    </script>
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 Zap⚡️ - ML Risk Analysis Dashboard | Enabled by JIRA API Integration, AI & ML-Powered Insights</p>
+    </div>
+</body>
+</html> 

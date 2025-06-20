@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Bug Risk Analysis Dashboard</title>
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#3498db">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .offline-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .offline-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .feature-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-section li {
+            padding: 0.4rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-section li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        .available li::before {
+            content: "✓";
+            color: var(--success-color);
+        }
+
+        .unavailable li::before {
+            content: "✗";
+            color: var(--accent-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(231, 76, 60, 0.2);
+            border-radius: 25px;
+            margin: 1rem 0;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .tips-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tips-section h4 {
+            margin-bottom: 1rem;
+            color: var(--warning-color);
+        }
+
+        .tips-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .tips-list li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .tips-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .offline-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .online {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .offline {
+            background: var(--accent-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-status offline" id="connectionStatus">
+        <span class="status-dot"></span>
+        Offline
+    </div>
+
+    <div class="offline-container">
+        <div class="offline-icon">📱</div>
+        <h1>You're Offline</h1>
+        <p class="subtitle">Bug Risk Analysis Dashboard is running in offline mode</p>
+        
+        <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span>No internet connection detected</span>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-section available">
+                <h3>✅ Available Offline</h3>
+                <ul>
+                    <li>View cached dashboard data</li>
+                    <li>Browse help documentation</li>
+                    <li>Access previously loaded charts</li>
+                    <li>View historical trends (cached)</li>
+                    <li>Dark/Light mode toggle</li>
+                    <li>Saved user preferences</li>
+                </ul>
+            </div>
+
+            <div class="feature-section unavailable">
+                <h3>❌ Requires Internet</h3>
+                <ul>
+                    <li>Real-time JIRA data analysis</li>
+                    <li>Live trend updates</li>
+                    <li>Push notifications</li>
+                    <li>New project analysis</li>
+                    <li>AI-powered insights</li>
+                    <li>Alert system monitoring</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="retryConnection()">
+                🔄 Retry Connection
+            </button>
+            <a href="/" class="btn btn-secondary">
+                📊 View Cached Dashboard
+            </a>
+            <a href="/help" class="btn btn-secondary">
+                📚 Help & Documentation
+            </a>
+        </div>
+
+        <div class="tips-section">
+            <h4>💡 Tips for Offline Use</h4>
+            <ul class="tips-list">
+                <li>Your last viewed data is automatically cached and available offline</li>
+                <li>The dashboard will automatically reconnect when internet is restored</li>
+                <li>Dark mode and user preferences are saved locally</li>
+                <li>Use "Add to Home Screen" for quick access on mobile devices</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check connection status
+        function updateConnectionStatus() {
+            const statusEl = document.getElementById('connectionStatus');
+            
+            if (navigator.onLine) {
+                statusEl.className = 'connection-status online';
+                statusEl.innerHTML = '<span style="width: 12px; height: 12px; background: white; border-radius: 50%; display: inline-block;"></span> Online';
+                
+                // Auto-redirect to main app when online
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            } else {
+                statusEl.className = 'connection-status offline';
+                statusEl.innerHTML = '<span class="status-dot"></span> Offline';
+            }
+        }
+
+        // Retry connection
+        function retryConnection() {
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '⏳ Checking...';
+            btn.disabled = true;
+            
+            // Check if we can reach the server
+            fetch('/api/health')
+                .then(response => {
+                    if (response.ok) {
+                        btn.innerHTML = '✅ Connected!';
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 500);
+                    } else {
+                        throw new Error('Server not reachable');
+                    }
+                })
+                .catch(() => {
+                    btn.innerHTML = '❌ Still Offline';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }, 2000);
+                });
+        }
+
+        // Listen for online/offline events
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+
+        // Initial check
+        updateConnectionStatus();
+
+        // Auto-check connection every 10 seconds
+        setInterval(updateConnectionStatus, 10000);
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'r' && (e.ctrlKey || e.metaKey)) {
+                retryConnection();
+                e.preventDefault();
+            }
+        });
+
+        console.log('📱 Offline page loaded - PWA ready!');
+    </script>
+</body>
+</html> 

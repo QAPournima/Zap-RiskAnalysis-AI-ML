@@ -1,0 +1,106 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ml-risk-prediction"
+version = "2.0.0"
+description = "AI-powered JIRA risk analysis and prediction system by Zap⚡️"
+readme = "README.md"
+license = {text = "Proprietary Commercial License"}
+authors = [
+    {name = "Zap⚡️ Team", email = "zapaitool@gmail.com"},
+    {name = "Pournima Tele", email = "qapournima@gmail.com"}
+]
+maintainers = [
+    {name = "Zap⚡️ Team", email = "zapaitool@gmail.com"},
+    {name = "Pournima Tele", email = "qapournima@gmail.com"}
+]
+keywords = ["jira", "risk-analysis", "machine-learning", "ai", "dashboard", "quality-assurance", "zap"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Bug Tracking",
+    "License :: Other/Proprietary License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Framework :: Flask",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "flask>=2.0.0",
+    "pandas>=1.3.0",
+    "numpy>=1.21.0",
+    "matplotlib>=3.4.0",
+    "jira>=3.0.0",
+    "requests>=2.25.0",
+    "python-dotenv>=0.19.0",
+]
+
+[project.optional-dependencies]
+webapp = [
+    "gunicorn>=20.1.0",
+    "psutil>=5.8.0",
+]
+dev = [
+    "pytest>=7.0",
+    "black>=22.0",
+    "flake8>=4.0",
+    "mypy>=0.950",
+]
+
+[project.urls]
+Homepage = "https://github.com/QAPournima/RiskAnalysis-AI-ML"
+Repository = "https://github.com/QAPournima/RiskAnalysis-AI-ML"
+Issues = "https://github.com/QAPournima/RiskAnalysis-AI-ML/issues"
+Documentation = "https://github.com/QAPournima/RiskAnalysis-AI-ML/wiki"
+Company = "https://zap-ai-tools.com"
+
+[project.scripts]
+ml-risk-analysis = "ml_bug_prediction.app:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"ml_bug_prediction" = ["../templates/*", "../static/*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["src/tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*" 

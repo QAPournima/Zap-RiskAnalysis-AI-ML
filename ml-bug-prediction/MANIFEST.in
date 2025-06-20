@@ -1,0 +1,40 @@
+# Include documentation
+include README.md
+include LICENSE
+recursive-include docs *.md *.rst *.txt
+
+# Include requirements files
+recursive-include requirements *.txt
+
+# Include templates and static files
+recursive-include templates *.html
+recursive-include static *.css *.js *.gif *.png *.jpg *.ico *.json
+
+# Include configuration files
+include pyproject.toml
+include Makefile
+include .gitignore
+
+# Include sample data and configuration
+recursive-include data *.json
+recursive-include config *.json
+
+# Include deployment files
+recursive-include deployments *.sql
+
+# Include scripts
+recursive-include scripts *.py
+
+# Exclude development and build files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .DS_Store
+global-exclude *.so
+global-exclude .git*
+global-exclude venv*
+global-exclude .venv*
+global-exclude build
+global-exclude dist
+global-exclude *.egg-info 

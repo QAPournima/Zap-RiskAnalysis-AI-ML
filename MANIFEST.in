@@ -1,0 +1,42 @@
+# Include documentation
+recursive-include docs *.md
+include docs/README.md
+
+# Include configuration files
+recursive-include config *.json
+
+# Include templates and static files
+recursive-include templates *.html
+recursive-include static *
+
+# Include data files (sample data only)
+include data/achievements.json
+include data/goals.json
+
+# Include scripts
+recursive-include scripts *.py
+
+# Include requirements
+recursive-include requirements *.txt
+
+# Include deployment files
+recursive-include deployments *.sql
+
+# Include notebooks (optional)
+recursive-include notebooks *.ipynb
+recursive-include notebooks/config *.json
+
+# Include project metadata
+include setup.py
+include MANIFEST.in
+include .gitignore
+
+# Exclude unwanted files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *~
+global-exclude .DS_Store
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+exclude venv_local
+exclude .git 

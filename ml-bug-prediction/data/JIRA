@@ -1,0 +1,68 @@
+# ...existing code...
+import ipywidgets as widgets
+from IPython.display import display, Markdown
+
+def component_risk_table_with_plot(data, project_name, top_components, plot_title):
+    # Compute risk map and max rank as in cell 2
+    data['Created'] = pd.to_datetime(data['Created'], errors='coerce', utc=True).dt.tz_localize(None)
+    last_month = data['Created'].max().to_period('M')
+    last_6_months = pd.period_range(end=last_month, periods=6, freq='M').astype(str)
+    data['Created_Month'] = data['Created'].dt.to_period('M').astype(str)
+    data_last6 = data[data['Created_Month'].isin(last_6_months)]
+
+    component_risk_rank = data_last6['Components'].value_counts().rank(ascending=False, method='min').astype(int)
+    component_risk_map = component_risk_rank.to_dict()
+    max_rank = component_risk_rank.max()
+
+    # Prepare the table
+    summary_df = data[['key', 'Components']].copy()
+    summary_df['Risk Score'] = data['Components'].apply(lambda x: risk_score_details(x, component_risk_map, max_rank))
+    summary_df['Explanation'] = [
+        explanation(row['Components'], row['Risk Score'], component_risk_map, max_rank) for _, row in summary_df.iterrows()
+    ]
+    summary_df = summary_df.rename(columns={'key': 'Bug ID'})
+    styled = summary_df.head(10).style.set_properties(
+        subset=['Explanation'],
+        **{'white-space': 'pre-wrap', 'word-break': 'break-word', 'max-width': '350px'}
+    )
+
+    # Prepare the plot
+    import matplotlib.pyplot as plt
+    import io
+    import PIL.Image
+
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.pie(
+        top_components,
+        labels=top_components.index,
+        autopct='%1.1f%%',
+        startangle=140,
+        counterclock=False,
+        wedgeprops={'edgecolor': 'white'}
+    )
+    ax.set_title(plot_title, fontsize=14, fontweight='bold')
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+    img = PIL.Image.open(buf)
+
+    # Display side by side using ipywidgets with improved layout
+    img_widget = widgets.Image(value=buf.getvalue(), format='png', layout=widgets.Layout(width='400px', height='400px'))
+    table_widget = widgets.Output(layout=widgets.Layout(width='700px'))
+    with table_widget:
+        display(Markdown(f"### 📊 Risk Scoring Output Table for {project_name}"))
+        display(styled)
+
+    hbox = widgets.HBox([img_widget, table_widget], layout=widgets.Layout(align_items='flex-start', justify_content='flex-start', gap='32px'))
+    display(hbox)
+
+# Example usage for iOS:
+component_risk_table_with_plot(
+    data_ios, 
+    "iOS", 
+    top_components_ios, 
+    'iOS (IOS) Bugs Distribution by Component (Last 6 Months)'
+)

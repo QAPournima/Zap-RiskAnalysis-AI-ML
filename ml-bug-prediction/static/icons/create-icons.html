@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PWA Icon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .icon-preview { margin: 10px; display: inline-block; }
+        canvas { border: 1px solid #ccc; margin: 5px; }
+        button { padding: 10px 20px; margin: 5px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🐞 BugDash PWA Icon Generator</h1>
+    <p>Click the button below to generate and download PWA icons:</p>
+    
+    <button onclick="generateIcons()">Generate Icons</button>
+    
+    <div id="iconContainer"></div>
+
+    <script>
+        function generateIcons() {
+            const sizes = [72, 96, 128, 144, 152, 192, 256, 384, 512];
+            const container = document.getElementById('iconContainer');
+            container.innerHTML = '';
+            
+            sizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // Create gradient background
+                const gradient = ctx.createLinearGradient(0, 0, size, size);
+                gradient.addColorStop(0, '#3498db');
+                gradient.addColorStop(1, '#2c3e50');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, size, size);
+                
+                // Add bug emoji
+                ctx.font = `${size * 0.6}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🐞', size / 2, size / 2);
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `icon-${size}x${size}.png`;
+                link.href = canvas.toDataURL();
+                
+                const div = document.createElement('div');
+                div.className = 'icon-preview';
+                div.innerHTML = `
+                    <div>${size}x${size}</div>
+                    <canvas width="${Math.min(size, 64)}" height="${Math.min(size, 64)}"></canvas>
+                    <br>
+                    <button onclick="downloadIcon('${link.href}', '${link.download}')">Download</button>
+                `;
+                
+                // Copy canvas to preview
+                const previewCanvas = div.querySelector('canvas');
+                const previewCtx = previewCanvas.getContext('2d');
+                previewCtx.drawImage(canvas, 0, 0, Math.min(size, 64), Math.min(size, 64));
+                
+                container.appendChild(div);
+                
+                // Auto-download for convenience
+                link.click();
+            });
+        }
+        
+        function downloadIcon(href, filename) {
+            const link = document.createElement('a');
+            link.href = href;
+            link.download = filename;
+            link.click();
+        }
+        
+        // Auto-generate icons on load
+        window.onload = function() {
+            setTimeout(generateIcons, 1000);
+        };
+    </script>
+</body>
+</html>

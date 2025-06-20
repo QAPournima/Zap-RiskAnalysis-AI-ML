@@ -1,0 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join('..')))
+
+from src.data_preprocessing import preprocess_data
+preprocess_data('../data/raw/sample.csv')

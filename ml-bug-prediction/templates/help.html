@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Risk Analysis Dashboard - User Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .help-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            max-width: 1200px;
+            padding: 40px;
+        }
+        
+        .section-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .section-content {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .feature-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #28a745;
+        }
+        
+        .risk-level {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        
+        .risk-critical { background: #e74c3c; color: white; }
+        .risk-high { background: #f39c12; color: white; }
+        .risk-medium { background: #f1c40f; color: black; }
+        .risk-low { background: #2ecc71; color: white; }
+        
+        .dashboard-preview {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+        
+        .btn-back {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .icon-large {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .tab-explanation {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #dee2e6;
+        }
+        
+        .ai-highlight {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .code-snippet {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            border-left: 4px solid #667eea;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="help-container">
+        <div class="text-center mb-4">
+            <i class="fas fa-question-circle icon-large"></i>
+            <h1 class="display-4 mb-3">📊 Bug Risk Analysis Dashboard</h1>
+            <h2 class="text-muted">Complete User Guide & Tutorial</h2>
+            <a href="/" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Purpose Section -->
+        <div class="section-header">
+            <h2><i class="fas fa-bullseye"></i> 🔍 Purpose & Overview</h2>
+        </div>
+        <div class="section-content">
+            <h4>Why Use This Dashboard?</h4>
+            <p class="lead">To <strong>prioritize where to focus testing, triage, and development resources</strong> by identifying components that are at highest risk due to bugs or structural issues.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="feature-box">
+                        <h5><i class="fas fa-target text-primary"></i> Strategic Focus</h5>
+                        <p>Identify which components need immediate attention</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-box">
+                        <h5><i class="fas fa-users text-success"></i> Resource Allocation</h5>
+                        <p>Direct your team's efforts where they'll have the biggest impact</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What's Being Analyzed Section -->
+        <div class="section-header">
+            <h2><i class="fas fa-chart-line"></i> 📊 What's Being Analyzed?</h2>
+        </div>
+        <div class="section-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4><i class="fas fa-bug text-danger"></i> Bug Distribution</h4>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Frequency and volume of bugs per component/module</li>
+                        <li><i class="fas fa-check text-success"></i> Trends over time: Are certain components repeatedly problematic?</li>
+                        <li><i class="fas fa-check text-success"></i> Severity levels and impact analysis</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h4><i class="fas fa-exclamation-triangle text-warning"></i> Risk Scores</h4>
+                    <p>Quantitative measure based on factors like:</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-dot-circle text-primary"></i> Severity of bugs</li>
+                        <li><i class="fas fa-dot-circle text-primary"></i> Historical failure rate</li>
+                        <li><i class="fas fa-dot-circle text-primary"></i> Code complexity or churn</li>
+                        <li><i class="fas fa-dot-circle text-primary"></i> Test coverage gaps</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="ai-highlight">
+                <h4><i class="fas fa-robot"></i> 🤖 AI-Enhanced Analysis</h4>
+                <p>Our dashboard now includes AI-powered insights that automatically detect patterns, predict future risks, and provide intelligent recommendations for your development workflow.</p>
+            </div>
+        </div>
+
+        <!-- Data Window Section -->
+        <div class="section-header">
+            <h2><i class="fas fa-calendar-alt"></i> 🗓️ Data Window: Last 6 Months</h2>
+        </div>
+        <div class="section-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Why 6 Months?</h4>
+                    <ul>
+                        <li>Focuses on <strong>recent activity</strong> to ensure findings reflect current system behavior</li>
+                        <li>Helps track <strong>ongoing problem areas</strong> rather than legacy issues</li>
+                        <li>Provides enough data for <strong>trend analysis</strong></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h4>Enhanced Tracking: Component Tagging</h4>
+                    <div class="feature-box">
+                        <p><strong>Recent improvement:</strong> We began tagging components on:</p>
+                        <ul>
+                            <li>Each production bug</li>
+                            <li>Every support ticket</li>
+                        </ul>
+                        <p><strong>Result:</strong> Much better visibility into which components are generating the most operational noise.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Read the Dashboard -->
+        <div class="section-header">
+            <h2><i class="fas fa-book-open"></i> 📖 How to Read the Dashboard</h2>
+        </div>
+        <div class="section-content">
+            
+            <!-- Step 1: Project Selection -->
+            <div class="tab-explanation">
+                <h4><span class="step-number">1</span>Project Selection</h4>
+                <p>Start by selecting a project from the dropdown menu:</p>
+                <div class="code-snippet">
+                    <strong>Available Projects:</strong><br>
+                    • Android (AND) - Mobile app bugs<br>
+                    • iOS (iOS) - iOS app issues<br>
+                    • MESSAGING (MSG) - Communication features<br>
+                    • Workspace Core (WSC) - Core platform<br>
+                    • WORKSPACE (WS) - Workspace features<br>
+                    • ALL - Combined analysis of all projects
+                </div>
+            </div>
+
+            <!-- Step 2: Overview Tab -->
+            <div class="tab-explanation">
+                <h4><span class="step-number">2</span>📈 Overview Tab</h4>
+                <p>The main analysis view showing:</p>
+                <ul>
+                    <li><strong>Interactive Pie Chart:</strong> Visual breakdown of bugs by component</li>
+                    <li><strong>Component Risk Table:</strong> Detailed risk levels with color coding</li>
+                    <li><strong>Summary Statistics:</strong> Total bugs, components, and date ranges</li>
+                </ul>
+                
+                <h5>Risk Level Color Coding:</h5>
+                <div class="my-3">
+                    <span class="risk-level risk-critical">CRITICAL (10+ bugs)</span>
+                    <span class="risk-level risk-high">HIGH (5-9 bugs)</span>
+                    <span class="risk-level risk-medium">MEDIUM (2-4 bugs)</span>
+                    <span class="risk-level risk-low">LOW (1 bug)</span>
+                </div>
+            </div>
+
+            <!-- Step 3: Trends Tab -->
+            <div class="tab-explanation">
+                <h4><span class="step-number">3</span>📊 Trends Tab</h4>
+                <p>Historical analysis showing:</p>
+                <ul>
+                    <li><strong>Monthly Bug Trends:</strong> How bug counts change over time</li>
+                    <li><strong>Component Evolution:</strong> Which components are getting better or worse</li>
+                    <li><strong>Seasonal Patterns:</strong> Identifying peak problem periods</li>
+                </ul>
+                <div class="dashboard-preview">
+                    📈 Example: "Component A had 15 bugs in Jan, 22 in Feb, 18 in Mar"<br>
+                    🔍 Insight: "Increasing trend - needs attention"
+                </div>
+            </div>
+
+            <!-- Step 4: Insights Tab -->
+            <div class="tab-explanation">
+                <h4><span class="step-number">4</span>💡 AI-Powered Insights Tab</h4>
+                <div class="ai-highlight">
+                    <p><strong>🤖 Advanced AI Intelligence:</strong> Comprehensive analysis includes:</p>
+                    
+                    <h5 style="color: #fff; margin-top: 1.5rem; margin-bottom: 1rem;">📊 AI Executive Intelligence</h5>
+                    <ul>
+                        <li><strong>Health Score (0-100):</strong> Overall project stability and quality assessment based on bug patterns, severity, and resolution trends</li>
+                        <li><strong>Business Impact Assessment:</strong> Evaluates how current bug levels affect business operations, user experience, and development velocity</li>
+                    </ul>
+                    
+                    <h5 style="color: #fff; margin-top: 1.5rem; margin-bottom: 1rem;">🎯 Intelligent Risk Analysis</h5>
+                    <ul>
+                        <li><strong>ML-Enhanced Risk Scoring:</strong> Machine learning algorithms analyze component vulnerability patterns and assign predictive risk scores</li>
+                        <li><strong>Smart Categorization:</strong> Automatically categorizes components into Critical, High, Medium, or Low risk levels with actionable thresholds</li>
+                    </ul>
+                    
+                    <h5 style="color: #fff; margin-top: 1.5rem; margin-bottom: 1rem;">🔮 Predictive Analytics</h5>
+                    <ul>
+                        <li><strong>Next Month Forecasting:</strong> Predicts future bug counts using historical patterns, seasonal trends, and team velocity analysis</li>
+                        <li><strong>Trend Direction Analysis:</strong> Identifies whether bug patterns are improving, declining, or staying stable with confidence metrics</li>
+                    </ul>
+                    
+                    <h5 style="color: #fff; margin-top: 1.5rem; margin-bottom: 1rem;">📝 NLP Intelligence</h5>
+                    <ul>
+                        <li><strong>Sentiment Analysis:</strong> Analyzes bug descriptions to understand team morale, user frustration levels, and communication tone</li>
+                        <li><strong>Urgency Detection:</strong> Automatically identifies critical issues that need immediate attention by analyzing language patterns in bug reports</li>
+                        <li><strong>Theme Extraction:</strong> Discovers common patterns and root causes by processing bug summaries and identifying recurring keywords</li>
+                    </ul>
+                    
+                    <h5 style="color: #fff; margin-top: 1.5rem; margin-bottom: 1rem;">🔄 Behavioral Patterns</h5>
+                    <ul>
+                        <li><strong>Peak Activity Analysis:</strong> Identifies when bugs are most likely to occur (time patterns, release cycles, deployment schedules)</li>
+                        <li><strong>Component Concentration:</strong> Shows which components consistently have the highest bug density and correlation analysis</li>
+                    </ul>
+                    
+                    <h5 style="color: #fff; margin-top: 1.5rem; margin-bottom: 1rem;">⚡ Strategic Recommendations</h5>
+                    <ul>
+                        <li><strong>AI-Generated Priorities:</strong> Suggests immediate actions based on risk scores, trends, and business impact with ROI estimates</li>
+                        <li><strong>Action Items:</strong> Provides specific, actionable recommendations prioritized by potential impact and resource requirements</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 5: Advanced Filtering -->
+            <div class="tab-explanation">
+                <h4><span class="step-number">5</span>🔍 Advanced Filtering</h4>
+                <p>Customize your analysis with filters:</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul>
+                            <li><strong>Date Range:</strong> Last 30 days, 3 months, 6 months, 1 year</li>
+                            <li><strong>Components:</strong> Focus on specific modules</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            <li><strong>Issue Types:</strong> Bug, Support Ticket, etc.</li>
+                            <li><strong>Environment:</strong> Production, Staging</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interpreting Results -->
+        <div class="section-header">
+            <h2><i class="fas fa-lightbulb"></i> 🎯 Interpreting Results & Taking Action</h2>
+        </div>
+        <div class="section-content">
+            <h4>🆘 High-Risk Components (Red Zone)</h4>
+            <div class="feature-box">
+                <p><strong>Characteristics:</strong></p>
+                <ul>
+                    <li>High bug volume, especially severe ones</li>
+                    <li>Elevated risk scores due to weak code/test health</li>
+                    <li>Patterns of repeated failure or lack of maintenance</li>
+                </ul>
+                <p><strong>Actions to Take:</strong></p>
+                <ul>
+                    <li>🔍 More intensive testing</li>
+                    <li>⚡ Faster bug triage</li>
+                    <li>👥 Re-allocation of developer or QA resources</li>
+                    <li>🔄 Consider refactoring or additional monitoring</li>
+                </ul>
+            </div>
+
+            <h4>✅ Example Use Case</h4>
+            <div class="dashboard-preview">
+                <strong>Scenario:</strong> Component A has the most critical bugs and the highest risk score<br><br>
+                <strong>Actions:</strong><br>
+                • It might get automated regression tests first, or<br>
+                • A dedicated team might be assigned to refactor or stabilize it<br>
+                • Increase monitoring and alerting for this component<br>
+                • Schedule code review sessions focused on this area
+            </div>
+
+            <h4>📊 Using the Data for Sprint Planning</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <h5>🏃‍♂️ Current Sprint</h5>
+                        <p>Focus on critical and high-risk components for immediate fixes</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <h5>📅 Next Sprint</h5>
+                        <p>Plan preventive work for medium-risk components showing upward trends</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <h5>🎯 Long-term</h5>
+                        <p>Use AI insights for architectural decisions and technical debt management</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Calculation Examples -->
+        <div class="section-header">
+            <h2><i class="fas fa-calculator"></i> 🧮 AI Calculation Examples</h2>
+        </div>
+        <div class="section-content">
+            <p class="lead">See exactly how our AI engine calculates insights with real examples:</p>
+            
+            <div class="feature-box">
+                <h4>📊 Health Score Calculation Example</h4>
+                <div class="dashboard-preview">
+                    <strong>Project:</strong> Android App (12 bugs)<br>
+                    <strong>Calculation:</strong><br>
+                    • Base Score: 100<br>
+                    • Critical Bugs (2): -15 points each = -30<br>
+                    • High Priority (3): -5 points each = -15<br>
+                    • Trend Factor: Decreasing = +5 bonus<br>
+                    • Resolution Speed: Good = +4 bonus<br>
+                    <strong>🤖 Final Health Score: 76/100 (Good)</strong>
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <h4>🎯 Risk Scoring Example</h4>
+                <div class="dashboard-preview">
+                    <strong>Component:</strong> Authentication Module<br>
+                    <strong>Data:</strong> 3 bugs, 2 critical, 1 recent<br>
+                    <strong>Calculation:</strong><br>
+                    • Bug Count Weight: 3 bugs × 10 = 30 points<br>
+                    • Severity Multiplier: 2 critical × 1.5 = +45<br>
+                    • Recency Factor: Recent bug = +15<br>
+                    • Historical Pattern: Stable = -5<br>
+                    <strong>🎯 Risk Score: 45/100 (MEDIUM)</strong>
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <h4>🔮 Predictive Analytics Example</h4>
+                <div class="dashboard-preview">
+                    <strong>Historical Data:</strong><br>
+                    • Month 1: 15 bugs<br>
+                    • Month 2: 18 bugs<br>
+                    • Month 3: 22 bugs<br>
+                    • Month 4: 19 bugs<br>
+                    <strong>AI Analysis:</strong><br>
+                    • Trend: -13% decrease detected<br>
+                    • Seasonal Pattern: No major seasonality<br>
+                    • Team Velocity: Stable<br>
+                    <strong>🔮 Prediction: 11 bugs next month (79% confidence)</strong>
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <h4>📝 NLP Analysis Example</h4>
+                <div class="dashboard-preview">
+                    <strong>Bug Descriptions Analyzed:</strong><br>
+                    • "Login timeout error blocking users"<br>
+                    • "Critical payment issue affecting customers"<br>
+                    • "Database connection timeout"<br>
+                    <strong>NLP Results:</strong><br>
+                    • Sentiment: 65% Negative (frustrated tone)<br>
+                    • Urgency: 2 urgent keywords detected<br>
+                    • Themes: timeout(2), error(2), critical(1)<br>
+                    <strong>📝 Analysis: High priority issues with customer impact</strong>
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <h4>🔄 Behavioral Pattern Example</h4>
+                <div class="dashboard-preview">
+                    <strong>Time Analysis:</strong><br>
+                    • Monday: 22% of bugs reported<br>
+                    • Tuesday: 18% of bugs reported<br>
+                    • Wednesday: 15% of bugs reported<br>
+                    • Post-deployment: 40% spike<br>
+                    <strong>Pattern Detection:</strong><br>
+                    • Peak Day: Monday (start-of-week effect)<br>
+                    • Deployment Impact: High correlation<br>
+                    <strong>🔄 Insight: Schedule extra QA on Mondays and post-deployment</strong>
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <h4>⚡ Strategic Recommendation Example</h4>
+                <div class="dashboard-preview">
+                    <strong>AI Analysis Input:</strong><br>
+                    • Authentication: 45 risk score (MEDIUM)<br>
+                    • Payment: 15 risk score (LOW)<br>
+                    • Recent trend: Improving<br>
+                    • Team capacity: 80%<br>
+                    <strong>AI Recommendations:</strong><br>
+                    1. ✅ Focus on Authentication module (ROI: High)<br>
+                    2. 🔄 Implement automated testing (Effort: Medium)<br>
+                    3. 📊 Monitor payment gateway trends (Priority: Low)<br>
+                    <strong>⚡ Expected Impact: 30% reduction in critical bugs</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features & Tips -->
+        <div class="section-header">
+            <h2><i class="fas fa-magic"></i> ✨ Pro Tips & Advanced Features</h2>
+        </div>
+        <div class="section-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>🔄 Auto-Refresh</h4>
+                    <p>Dashboard automatically updates every 5 minutes to show real-time data</p>
+                    
+                    <h4>💾 Smart Caching</h4>
+                    <p>Data is cached for 5 minutes to ensure fast loading while staying current</p>
+                    
+                    <h4>🚨 Real-time Alerts</h4>
+                    <p>Check <code>/api/alerts/check</code> for current risk alerts</p>
+                </div>
+                <div class="col-md-6">
+                    <h4>📱 Mobile Friendly</h4>
+                    <p>Responsive design works on all devices</p>
+                    
+                    <h4>🔗 API Access</h4>
+                    <p>All data available via REST API for integration with other tools</p>
+                    
+                    <h4>🤖 AI Confidence</h4>
+                    <p>AI insights include confidence scores - higher scores indicate more reliable predictions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="section-header">
+            <h2><i class="fas fa-tools"></i> 🔧 Troubleshooting</h2>
+        </div>
+        <div class="section-content">
+            <h4>Common Issues & Solutions</h4>
+            <div class="feature-box">
+                <h5>❌ "No data found" message</h5>
+                <ul>
+                    <li>Check if the selected project has recent bugs in JIRA</li>
+                    <li>Try adjusting the date range filter</li>
+                    <li>Verify JIRA connection is working</li>
+                </ul>
+            </div>
+            
+            <div class="feature-box">
+                <h5>⏳ Slow loading</h5>
+                <ul>
+                    <li>Data is being fetched from JIRA - please wait</li>
+                    <li>Try clearing cache with <code>/api/cache/clear</code></li>
+                    <li>Check network connection</li>
+                </ul>
+            </div>
+            
+            <div class="feature-box">
+                <h5>🔍 Missing components</h5>
+                <ul>
+                    <li>Components must be properly tagged in JIRA</li>
+                    <li>Check if component names match JIRA configuration</li>
+                    <li>Verify filter settings aren't excluding data</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-5 pt-4 border-top">
+            <h4>🚀 Ready to Get Started?</h4>
+            <p class="text-muted mb-4">Use this dashboard to make data-driven decisions about where to focus your development and testing efforts.</p>
+            <a href="/" class="btn-back">
+                <i class="fas fa-chart-line"></i> Open Dashboard
+            </a>
+            <div class="mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    For technical support or feature requests, contact your QA Team.
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
