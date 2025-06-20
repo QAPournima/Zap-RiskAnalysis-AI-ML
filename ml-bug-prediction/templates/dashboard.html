@@ -2615,20 +2615,23 @@
         }
         /* Footer Styling */
         .footer {
-            margin-top: 40px;
+            margin: 40px auto 20px auto;
+            max-width: 1200px;
             padding: 20px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 10px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
         .footer p {
             margin: 0;
             font-size: 0.9em;
             font-weight: 500;
-            opacity: 0.9;
-        }
+            opacity: 0.95;
+        }           
+        
     </style>
 </head>
 <body>
@@ -2937,6 +2940,10 @@
                 </div>
             </div>
         </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 Zap⚡️ - ML Risk Analysis Dashboard | Enabled by JIRA API Integration, AI & ML-Powered Insights</p>
     </div>
 
     <!-- Notification Container -->
@@ -9240,9 +9247,5 @@
             console.log('🚀 Bug Risk Analysis Dashboard loaded with PWA features!');
         });
     </script>
-    <!-- Footer -->
-    <div class="footer">
-        <p>© 2025 Zap⚡️ - ML Risk Analysis Dashboard | Enabled by JIRA API Integration, AI & ML-Powered Insights</p>
-    </div>
 </body>
 </html> 
