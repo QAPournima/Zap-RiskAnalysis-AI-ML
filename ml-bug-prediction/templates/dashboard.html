@@ -2661,6 +2661,26 @@
                             </a>
                         </div>
                     </div>
+                    <div class="profile-dropdown" style="position: relative; display: inline-block;">
+                        <button onclick="toggleProfileDropdown()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" id="profileButton">
+                            <i class="fas fa-user-circle"></i> <span id="profileName">User</span> <i class="fas fa-chevron-down" style="margin-left: 5px; font-size: 0.8em;"></i>
+                        </button>
+                        <div id="profileDropdownMenu" class="profile-dropdown-menu" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; min-width: 220px; overflow: hidden;">
+                            <div class="dropdown-header" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0; background: #f8f9fa;">
+                                <div style="font-weight: 600; color: #333;" id="dropdownUserName">User Name</div>
+                                <div style="font-size: 0.85em; color: #666;" id="dropdownUserEmail">user@example.com</div>
+                            </div>
+                            <a href="#" class="dropdown-item" style="display: block; padding: 12px 16px; text-decoration: none; color: #333; transition: background 0.2s ease;" onclick="openProfileModal(); closeProfileDropdown();">
+                                <i class="fas fa-user-edit" style="margin-right: 8px; color: #667eea;"></i>
+                                <strong>Edit Profile</strong>
+                                
+                            </a>
+                            <button onclick="logoutUser()" class="dropdown-item" style="display: block; width: 100%; padding: 12px 16px; text-decoration: none; color: #dc3545; background: none; border: none; text-align: left; cursor: pointer; transition: background 0.2s ease;">
+                                <i class="fas fa-sign-out-alt" style="margin-right: 8px; color: #dc3545;"></i>
+                                <strong>Sign out</strong>
+                            </button>
+                        </div>
+                    </div>
                     <a href="/settings" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem; text-decoration: none; color: inherit;" title="Configure JIRA and Project Settings">
                         <i class="fas fa-cog"></i> Settings
                     </a>
@@ -2973,7 +2993,7 @@
          data-auto-refresh="{{ dashboard_config.auto_refresh | lower }}" 
          data-refresh-interval="{{ dashboard_config.refresh_interval }}" 
          style="display: none;"></div>
-    
+<script src="/static/profile-functions.js"></script>
     <script>
         // Global variables
         const configEl = document.getElementById('config');
@@ -6200,12 +6220,123 @@
             if (instructionContainer) instructionContainer.style.display = 'none'; // Hide instructions
             
             if (errorMessage) {
-                // Check if this is the "no data found" scenario
-                if (message.toLowerCase().includes('no data found')) {
+                // Check if this is a configuration-related error
+                if (isConfigurationError(message)) {
+                    showConfigurationRequiredMessage(message);
+                } else if (message.toLowerCase().includes('no data found')) {
                     showNoDataFoundMessage();
                 } else {
                     showGenericErrorMessage(message);
                 }
+            }
+        }
+
+        function isConfigurationError(message) {
+            console.log('🔍 Checking if error is configuration-related:', message);
+            /**
+             * Detect configuration-related errors that indicate missing JIRA/project setup
+             */
+            const configurationKeywords = [
+                'jira configuration required',
+                'configuration required',
+                'missing required field',
+                'jira_url',
+                'username',
+                'api_token',
+                'your-company.atlassian.net',
+                'your-email@company.com',
+                'placeholder values',
+                'http 404',
+                'page not found',
+                'authentication',
+                'unauthorized',
+                '401',
+                'not configured',
+                'jira server not found',
+                'connection failed',
+                'server not found',
+                'project analysis',
+                'add project details',
+                'project details',
+                'start with project',
+                'please add project',
+                'no projects configured',
+                'configure projects',
+                'setup required'
+            ];
+            
+            const lowerMessage = message.toLowerCase();
+            const isConfigError = configurationKeywords.some(keyword => lowerMessage.includes(keyword));
+            
+            console.log('🎯 Configuration error detected:', isConfigError);
+            if (isConfigError) {
+                console.log('✅ Error will show configuration help instead of generic error');
+            }
+            
+            return isConfigError;
+        }
+
+        function showConfigurationRequiredMessage(originalMessage) {
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (errorMessage) {
+                errorMessage.innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1.5rem;">⚙️</div>
+                        <h3 style="color: #856404; margin-bottom: 1rem;">Project Configuration Required</h3>
+                        <p style="font-size: 1.2rem; color: #6c757d; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                            To start with Risk Analysis, you need to configure your JIRA connection and add projects first.
+                        </p>
+                        
+                        <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 12px; padding: 2rem; margin: 2rem auto; max-width: 700px; text-align: left;">
+                            <h5 style="color: #856404; margin-bottom: 1.5rem; text-align: center;">📋 Configuration Steps Required:</h5>
+                            <ol style="margin: 0; padding-left: 1.5rem; color: #856404;">
+                                <li style="margin-bottom: 1rem;">
+                                    <strong>🔗 JIRA Connection:</strong> Configure your JIRA server details (URL, email, API token)
+                                </li>
+                                <li style="margin-bottom: 1rem;">
+                                    <strong>📂 Project Setup:</strong> Add or discover JIRA projects you want to analyze
+                                </li>
+                                <li style="margin-bottom: 1rem;">
+                                    <strong>✅ Test Connection:</strong> Verify your configuration works properly
+                                </li>
+                                <li style="margin-bottom: 0;">
+                                    <strong>🚀 Start Analysis:</strong> Return to dashboard and analyze your projects
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div style="margin: 2rem auto; max-width: 600px;">
+                            <button onclick="window.open('/settings', '_blank')" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.75rem 2rem; margin-right: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; color: white; cursor: pointer; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                                ⚙️ Open Settings Page
+                            </button>
+                            <button onclick="showConfigurationHelp()" class="btn btn-secondary" style="font-size: 1.1rem; padding: 0.75rem 2rem; background: #6c757d; border: none; border-radius: 8px; color: white; cursor: pointer;">
+                                📖 Configuration Guide
+                            </button>
+                        </div>
+                        
+                        <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 1.5rem; margin: 2rem auto; max-width: 600px; text-align: left;">
+                            <h6 style="color: #0c5460; margin-bottom: 1rem;">💡 Quick Setup Tips:</h6>
+                            <ul style="margin: 0; padding-left: 1.5rem; color: #0c5460;">
+                                <li style="margin-bottom: 0.5rem;">JIRA URL format: <code>https://yourcompany.atlassian.net</code></li>
+                                <li style="margin-bottom: 0.5rem;">Use your full email address as username</li>
+                                <li style="margin-bottom: 0.5rem;">Generate API token from JIRA Account Settings → Security</li>
+                                <li style="margin-bottom: 0;">Use "Discover Projects" feature for automatic project detection</li>
+                            </ul>
+                        </div>
+                        
+                        ${originalMessage.toLowerCase().includes('authentication') || originalMessage.toLowerCase().includes('401') ? `
+                        <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 1rem; margin: 1rem auto; max-width: 600px; text-align: left;">
+                            <h6 style="color: #721c24; margin-bottom: 0.5rem;">🔐 Authentication Issue Detected:</h6>
+                            <p style="color: #721c24; margin: 0; font-size: 0.9rem;">Your JIRA credentials appear to be invalid or expired. Please update your settings.</p>
+                        </div>
+                        ` : ''}
+                        
+                        <p style="margin-top: 2rem; font-size: 0.9rem; color: #6c757d;">
+                            💬 Need help? Check the Settings page for detailed configuration instructions and troubleshooting.
+                        </p>
+                    </div>
+                `;
             }
         }
 
@@ -7461,6 +7592,160 @@
                 }
             }
         }
+
+        // ========================================================================================
+        // 👤 USER PROFILE DROPDOWN FUNCTIONALITY
+        // ========================================================================================
+
+        // Profile Dropdown Functionality
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdownMenu');
+            if (dropdown) {
+                const isVisible = dropdown.style.display === 'block';
+                dropdown.style.display = isVisible ? 'none' : 'block';
+                
+                if (!isVisible) {
+                    // Close dropdown when clicking outside
+                    setTimeout(() => {
+                        document.addEventListener('click', function closeDropdown(e) {
+                            if (!e.target.closest('.profile-dropdown')) {
+                                dropdown.style.display = 'none';
+                                document.removeEventListener('click', closeDropdown);
+                            }
+                        });
+                    }, 100);
+                }
+            }
+        }
+
+        function closeProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdownMenu');
+            if (dropdown) {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        // Enhanced Logout Functionality
+        async function logoutUser() {
+            try {
+                // Show confirmation
+                if (!confirm('Are you sure you want to Sign out?')) {
+                    return;
+                }
+
+                // Close profile dropdown
+                closeProfileDropdown();
+
+                // Show logout process
+                showNotification('🔄 Logging out...', 'info', 2000);
+
+                // Call logout API
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Clear any local storage/session data
+                    sessionStorage.clear();
+                    
+                    // Clear specific items from localStorage that might contain session data
+                    const keysToRemove = [
+                        'user_session',
+                        'auth_token', 
+                        'remember_user',
+                        'dashboard_state',
+                        'theme_preference',
+                        'notifications-disabled'
+                    ];
+                    keysToRemove.forEach(key => localStorage.removeItem(key));
+
+                    // Show success message
+                    showNotification('✅ Logged out successfully', 'success', 3000);
+
+                    // Prevent back navigation to dashboard by clearing history
+                    if (window.history.replaceState) {
+                        window.history.replaceState(null, null, '/login');
+                    }
+                    
+                    // Disable back button navigation
+                    window.onpopstate = function () {
+                        window.location.replace('/login');
+                    };
+
+                    // Redirect to login page after brief delay
+                    setTimeout(() => {
+                        window.location.replace('/login');
+                    }, 1000);
+
+                } else {
+                    throw new Error('Logout failed');
+                }
+
+            } catch (error) {
+                console.error('Logout error:', error);
+                showNotification('❌ Logout failed. Please try again.', 'error', 5000);
+            }
+        }
+
+        // Load user profile information on page load
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/api/profile');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        const profile = data.profile;
+                        
+                        // Update profile button and dropdown
+                        const profileName = document.getElementById('profileName');
+                        const dropdownUserName = document.getElementById('dropdownUserName');
+                        const dropdownUserEmail = document.getElementById('dropdownUserEmail');
+                        
+                        if (profileName) {
+                            profileName.textContent = profile.name || 'User';
+                        }
+                        if (dropdownUserName) {
+                            dropdownUserName.textContent = profile.name || 'User Name';
+                        }
+                        if (dropdownUserEmail) {
+                            dropdownUserEmail.textContent = profile.email || 'user@example.com';
+                        }
+
+                        console.log('✅ User profile loaded:', profile.name);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+
+        // Session validation and auto-logout
+        async function validateSession() {
+            try {
+                const response = await fetch('/api/auth/validate');
+                if (!response.ok) {
+                    // Session invalid, redirect to login
+                    console.log('⚠️ Session validation failed, redirecting to login');
+                    showNotification('⚠️ Session expired. Please login again.', 'warning', 3000);
+                    setTimeout(() => {
+                        window.location.replace('/login');
+                    }, 3000);
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.error('Session validation error:', error);
+                return false;
+            }
+        }
+
+        // Check session periodically (every 5 minutes)
+        setInterval(validateSession, 5 * 60 * 1000);
+
+        console.log('👤 User Profile Management System loaded!');
 
         // Advanced Smart Notification System
         class SmartNotificationSystem {
@@ -9226,9 +9511,94 @@
         }
         
         console.log('🎯 Goal Tracking System loaded!');
+        
+        function showConfigurationHelp() {
+            /**
+             * Show detailed configuration help modal/popup
+             */
+            const helpContent = `
+                <div style="max-width: 800px; margin: 0 auto; text-align: left;">
+                    <h4 style="text-align: center; margin-bottom: 2rem;">📖 ML Risk Analysis Configuration Guide</h4>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h5>🔗 Step 1: JIRA Configuration</h5>
+                        <ol>
+                            <li><strong>JIRA URL:</strong> Enter your Atlassian JIRA URL (e.g., https://yourcompany.atlassian.net)</li>
+                            <li><strong>Email:</strong> Your JIRA account email address</li>
+                            <li><strong>API Token:</strong> Generate from <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">Atlassian API Tokens</a></li>
+                            <li><strong>Test Connection:</strong> Use the "Test JIRA Connection" button to verify</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h5>📂 Step 2: Project Setup</h5>
+                        <p><strong>Option A: Auto-Discovery (Recommended)</strong></p>
+                        <ol>
+                            <li>Click "Discover Projects" button in Settings</li>
+                            <li>System finds all accessible JIRA projects</li>
+                            <li>Enable projects you want to analyze</li>
+                            <li>Save configuration</li>
+                        </ol>
+                        
+                        <p><strong>Option B: Manual Setup</strong></p>
+                        <ol>
+                            <li>Click "Add Project" in Settings</li>
+                            <li>Enter project name and JIRA key</li>
+                            <li>Enable for analysis</li>
+                            <li>Save project</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="background: #e9ecef; padding: 1rem; border-radius: 8px;">
+                        <h6>🛠️ Troubleshooting Common Issues:</h6>
+                        <ul>
+                            <li><strong>404 Error:</strong> Check JIRA URL format and accessibility</li>
+                            <li><strong>401 Error:</strong> Verify email and API token are correct</li>
+                            <li><strong>No Projects:</strong> Ensure you have permission to access JIRA projects</li>
+                            <li><strong>Connection Timeout:</strong> Check network connectivity and firewall settings</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            // Create and show modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.7); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center; padding: 2rem;
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: white; padding: 2rem; border-radius: 12px; 
+                max-width: 90vw; max-height: 90vh; overflow-y: auto;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            `;
+            
+            modalContent.innerHTML = helpContent + `
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="this.closest('.modal').remove()" style="background: #6c757d; color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer;">
+                        Close Guide
+                    </button>
+                </div>
+            `;
+            
+            modal.className = 'modal';
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Close on background click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
     </script>
 
     <!-- Load PWA Dependencies -->
+<script src="/static/profile-functions.js"></script>
     <script>
         // Start PWA initialization
         document.addEventListener('DOMContentLoaded', function() {
@@ -9242,6 +9612,8 @@
             setTimeout(enhanceAlertBanner, 100);
             
             // Then load PWA features
+            loadUserProfile();
+            
             loadPWADependencies();
             
             console.log('🚀 Bug Risk Analysis Dashboard loaded with PWA features!');

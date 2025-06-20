@@ -1,6 +1,8 @@
 # Enhanced Flask Application with Real-Time Dashboard and Advanced Filtering
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, redirect
 import pandas as pd
+from .services.auth_manager import auth_manager
+from functools import wraps
 import numpy as np
 from .services.settings_manager import settings_manager
 from datetime import datetime, timedelta
@@ -104,6 +106,32 @@ class DashboardConfig:
     DEFAULT_DATE_RANGE = 180  # days
 
 # Cache for storing analysis results
+# Authentication middleware
+def login_required(f):
+    """Decorator to require authentication for routes"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Check session token
+        session_token = request.cookies.get('session_token') or request.headers.get('Authorization')
+        
+        if not session_token:
+            if request.is_json:
+                return jsonify({"error": "Authentication required", "redirect": "/login"}), 401
+            return redirect("/login")
+        
+        # Validate session
+        session_validation = auth_manager.validate_session(session_token)
+        if not session_validation.get('valid'):
+            if request.is_json:
+                return jsonify({"error": "Session expired", "redirect": "/login"}), 401
+            return redirect("/login")
+        
+        # Store user info in request context
+        request.current_user = session_validation['user']
+        return f(*args, **kwargs)
+    
+    return decorated_function
+
 analysis_cache = {}
 last_cache_update = {}
 
@@ -825,6 +853,7 @@ def generate_enhanced_risk_analysis(data, project_name):
         'total_components': len(component_counts)
     }
 
+@login_required
 @app.route('/')
 def dashboard():
     """Main dashboard route with AI-enhanced features"""
@@ -870,6 +899,7 @@ def user_guide_tutorial():
     company_name = settings_manager.get_company_name()
     return render_template('user-guide.html', company_name=company_name)
 
+@login_required
 @app.route('/api/analyze/<project_id>', methods=['GET', 'POST'])
 def analyze_project(project_id):
     """Enhanced project analysis API with filtering support"""
@@ -942,6 +972,7 @@ def analyze_project(project_id):
         
     except Exception as e:
         return jsonify({'success': False, 'message': f'Analysis error: {str(e)}'})
+@login_required
 
 @app.route('/api/trends/<project_id>')
 def get_trends(project_id):
@@ -1091,6 +1122,7 @@ def get_all_projects_trends():
     except Exception as e:
         print(f"❌ Error in combined trend analysis: {e}")
         return jsonify({'success': False, 'message': f'Combined trend analysis error: {str(e)}'})
+@login_required
 
 @app.route('/api/alerts/check')
 def check_alerts():
@@ -1144,6 +1176,7 @@ def check_alerts():
         
     except Exception as e:
         return jsonify({'success': False, 'message': f'Alert check error: {str(e)}'})
+@login_required
 
 @app.route('/api/filters/<project_id>')
 def get_available_filters(project_id):
@@ -2595,3 +2628,275 @@ if __name__ == '__main__':
     print("=" * 60)
     
     app.run(debug=True, host='0.0.0.0', port=5001) 
+# Authentication routes
+@app.route('/login')
+def login_page():
+    """Render login page"""
+    return render_template('login.html')
+
+@app.route('/register')
+def register_page():
+    """Render registration page"""
+    return render_template('register.html')
+
+@app.route('/api/auth/register', methods=['POST'])
+def register_user():
+    """Handle user registration"""
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                "success": False,
+                "message": "No data provided"
+            }), 400
+        
+        # Register user
+        result = auth_manager.register_user(data)
+        
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Registration error: {str(e)}"
+        }), 500
+
+@app.route('/api/auth/login', methods=['POST'])
+def login_user():
+    """Handle user login"""
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                "success": False,
+                "message": "No data provided"
+            }), 400
+        
+        email = data.get('email')
+        password = data.get('password')
+        remember_me = data.get('rememberMe', False)
+        
+        # Authenticate user
+        auth_result = auth_manager.authenticate_user(email, password)
+        
+        if auth_result['success']:
+            # Create session
+            session_token = auth_manager.create_session(email)
+            
+            # Set cookie
+            response = jsonify({
+                "success": True,
+                "message": "Login successful",
+                "user": auth_result['user'],
+                "sessionToken": session_token
+            })
+            
+            # Set cookie with appropriate expiration
+            max_age = 30 * 24 * 60 * 60 if remember_me else None  # 30 days or session
+            response.set_cookie('session_token', session_token, 
+                              max_age=max_age, 
+                              secure=False,  # Set to True in production with HTTPS
+                              httponly=True)
+            
+            return response, 200
+        else:
+            return jsonify(auth_result), 401
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Login error: {str(e)}"
+        }), 500
+
+@app.route('/api/auth/logout', methods=['POST'])
+def logout_user():
+    """Handle user logout"""
+    try:
+        session_token = request.cookies.get('session_token')
+        
+        if session_token:
+            auth_manager.logout_session(session_token)
+        
+        response = jsonify({
+            "success": True,
+            "message": "Logged out successfully"
+        })
+        
+        # Clear session cookie
+        response.set_cookie('session_token', '', expires=0)
+        
+        return response, 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Logout error: {str(e)}"
+        }), 500
+
+@app.route('/api/auth/validate', methods=['GET'])
+def validate_session():
+    """Validate current session"""
+    try:
+        session_token = request.cookies.get('session_token')
+        
+        if not session_token:
+            return jsonify({"valid": False, "message": "No session token"}), 401
+        
+        result = auth_manager.validate_session(session_token)
+        
+        if result['valid']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 401
+            
+    except Exception as e:
+        return jsonify({
+            "valid": False,
+            "message": f"Validation error: {str(e)}"
+        }), 500
+
+# ==================== USER PROFILE ENDPOINTS ====================
+
+@app.route('/profile')
+@login_required
+def profile_page():
+    """Profile management page"""
+    return render_template('profile.html')
+
+@app.route('/api/profile', methods=['GET'])
+@login_required
+def get_user_profile():
+    """Get current user profile"""
+    try:
+        user_data = request.current_user
+        
+        # Remove sensitive information
+        profile_data = {
+            'name': user_data.get('name'),
+            'email': user_data.get('email'),
+            'company_name': user_data.get('company_name'),
+            'role': user_data.get('role'),
+            'created_at': user_data.get('created_at')
+        }
+        
+        return jsonify({
+            "success": True,
+            "profile": profile_data
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Failed to get profile: {str(e)}"
+        }), 500
+
+@app.route('/api/profile', methods=['PUT'])
+@login_required
+def update_user_profile():
+    """Update user profile"""
+    try:
+        data = request.get_json()
+        user_email = request.current_user['email']
+        
+        # Extract update fields
+        update_fields = {}
+        if 'name' in data:
+            update_fields['name'] = data['name'].strip()
+        if 'company_name' in data:
+            update_fields['company_name'] = data['company_name'].strip()
+        if 'role' in data:
+            update_fields['role'] = data['role'].strip()
+        
+        # Validate required fields
+        if 'name' in update_fields and not update_fields['name']:
+            return jsonify({
+                "success": False,
+                "error": "Name is required"
+            }), 400
+        
+        # Update profile
+        success = auth_manager.update_user_profile(user_email, update_fields)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": "Profile updated successfully"
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Failed to update profile"
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Failed to update profile: {str(e)}"
+        }), 500
+
+@app.route('/api/profile/change-password', methods=['POST'])
+@login_required
+def change_password():
+    """Change user password"""
+    try:
+        data = request.get_json()
+        user_email = request.current_user['email']
+        
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
+        
+        # Validate input
+        if not all([current_password, new_password, confirm_password]):
+            return jsonify({
+                "success": False,
+                "error": "All password fields are required"
+            }), 400
+        
+        if new_password != confirm_password:
+            return jsonify({
+                "success": False,
+                "error": "New passwords do not match"
+            }), 400
+        
+        # Validate current password
+        login_result = auth_manager.authenticate_user(user_email, current_password)
+        if not login_result.get('success'):
+            return jsonify({
+                "success": False,
+                "error": "Current password is incorrect"
+            }), 400
+        
+        # Validate new password strength
+        password_validation = auth_manager.validate_password(new_password)
+        if not password_validation['valid']:
+            return jsonify({
+                "success": False,
+                "error": password_validation['error']
+            }), 400
+        
+        # Change password
+        success = auth_manager.change_password(user_email, new_password)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": "Password changed successfully"
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Failed to change password"
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Failed to change password: {str(e)}"
+        }), 500
+
