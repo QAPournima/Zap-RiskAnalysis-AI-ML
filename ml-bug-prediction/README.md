@@ -13,6 +13,21 @@ A Product by Zap ⚡️ Team, an intelligent project management tool with an int
 - 🏢 **Multi-Project Support** - Analyze multiple projects with company-wide insights
 - ⚠️ **Smart Alerts** - Intelligent risk alerts and notification system
 - 📱 **Progressive Web App** - Offline capabilities and mobile-responsive design
+- 🔐 **User Authentication** - Secure email/password login with session management
+- 👤 **Profile Sidebar** - Modern right-sliding sidebar for profile management
+- 🔒 **Secure Sessions** - Token-based authentication with 8-hour session expiration
+- 🌙 **Dark Mode Support** - Complete dark theme compatibility
+- 📝 **User Registration** - Simple account creation with role-based access
+- 🔐 **User Authentication** - Secure email/password login with session management
+- 👤 **Profile Sidebar** - Modern right-sliding sidebar for profile management
+- 🔒 **Secure Sessions** - Token-based authentication with 8-hour session expiration
+- 🌙 **Dark Mode Support** - Complete dark theme compatibility
+- 📝 **User Registration** - Simple account creation with role-based access
+- 🔐 **User Authentication** - Secure email/password login with session management
+- 👤 **Profile Sidebar** - Modern right-sliding sidebar for profile management
+- 🔒 **Secure Sessions** - Token-based authentication with 8-hour session expiration
+- 🌙 **Dark Mode Support** - Complete dark theme compatibility
+- 📝 **User Registration** - Simple account creation with role-based access
 
 ## 🚀 Quick Start
 
@@ -26,8 +41,8 @@ A Product by Zap ⚡️ Team, an intelligent project management tool with an int
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/QAPournima/RiskAnalysis-AI-ML.git
-   cd RiskAnalysis-AI-ML/ml-bug-prediction
+   git clone https://github.com/QAPournima/Zap-RiskAnalysis-AI-ML.git
+   cd Zap-RiskAnalysis-AI-ML/ml-bug-prediction
    ```
 
 2. **Create virtual environment:**
@@ -48,11 +63,82 @@ A Product by Zap ⚡️ Team, an intelligent project management tool with an int
 
 5. **Open your browser:** http://localhost:5001
 
+## 🔐 Authentication & User Management
+
+### 🔒 User Registration & Login
+
+#### First-Time Setup
+1. **Navigate to Registration**: Visit http://localhost:5001/register
+2. **Create Account**:
+   - **Full Name**: Your display name
+   - **Email Address**: Valid email (will be used for login)
+   - **Password**: Strong password (min 8 characters, mixed case, numbers, symbols)
+   - **Company Name**: Your organization name
+   - **Role**: Select your role (QA Engineer, Developer, Project Manager, etc.)
+3. **Complete Registration**: Account created instantly with JSON storage
+4. **Login**: Use your email and password at http://localhost:5001/login
+
+#### Login Process
+- **Email/Password Authentication**: Secure login with hashed passwords
+- **Session Management**: 8-hour session duration with automatic renewal
+- **Remember Me**: Optional session persistence
+- **Security Features**: Rate limiting, account lockout protection
+
+### 👤 Profile Management
+
+#### Modern Profile Sidebar
+✨ **NEW**: Profile editing now opens in a sleek right-sliding sidebar instead of a popup modal!
+
+**Key Features:**
+- **Smooth Animations**: Sidebar slides in from the right with cubic-bezier transitions
+- **Responsive Design**: Works perfectly on desktop and mobile devices
+- **Two-Tab Interface**: 
+  - 📝 **Edit Profile**: Update name, company, and role
+  - 🔒 **Change Password**: Secure password change with validation
+- **Real-time Updates**: Changes reflect immediately in the header
+- **Dark Mode Compatible**: Full dark theme support
+- **Multiple Close Options**: Click outside, press Escape, or use the × button
+
+#### Accessing Profile Settings
+1. **Click Profile Icon**: Located in the top-right corner of the dashboard
+2. **Select "Edit Profile"**: From the dropdown menu
+3. **Sidebar Opens**: Smooth slide-in animation from the right
+4. **Edit Information**: Update profile details or change password
+5. **Save Changes**: Click "Update Profile" or "Change Password"
+
+#### Profile Features
+- **Real-time Validation**: Instant feedback on form inputs
+- **Password Strength**: Secure password requirements and validation
+- **Success Notifications**: Clear feedback when changes are saved
+- **Error Handling**: Helpful error messages for troubleshooting
+
+### 🔐 Security Features
+
+#### Authentication Security
+- **Password Hashing**: PBKDF2 with SHA-256 for secure password storage
+- **Session Tokens**: Cryptographically secure session management
+- **Automatic Logout**: Sessions expire after 8 hours of inactivity
+- **Rate Limiting**: Protection against brute force attacks (5 attempts per 15 minutes)
+
+#### User Session Management
+- **Secure Sessions**: Token-based authentication with expiration
+- **Session Cleanup**: Automatic cleanup of expired sessions
+- **Multi-device Support**: Users can be logged in on multiple devices
+- **Logout Confirmation**: Simple confirmation dialog before signing out
+
 ## 🔧 How to Use
 
 ### 🔐 Initial Setup
 
-#### 1. JIRA Configuration
+#### 1. User Account Setup
+**First-time users must create an account:**
+1. **Visit Registration Page**: http://localhost:5001/register
+2. **Fill Registration Form**: Provide name, email, secure password, company, and role
+3. **Create Account**: Click "Create Account" button
+4. **Login**: Use your credentials at http://localhost:5001/login
+5. **Access Dashboard**: Redirected to the main dashboard upon successful authentication
+
+#### 2. JIRA Configuration
 1. **Navigate to Settings**: Click the ⚙️ Settings icon in the top navigation
 2. **JIRA Configuration Section**:
    - **JIRA URL**: Enter your Atlassian JIRA URL (e.g., `https://yourcompany.atlassian.net`)
@@ -62,7 +148,7 @@ A Product by Zap ⚡️ Team, an intelligent project management tool with an int
 3. **Test Connection**: Click "Test JIRA Connection" to verify your settings
 4. **Save Configuration**: Click "Save JIRA Settings"
 
-#### 2. Project Setup
+#### 3. Project Setup
 **Option A: Auto-Discovery (Recommended)**
 1. In Settings → **Project Management**
 2. Click **"Discover Projects"** button
@@ -408,7 +494,134 @@ This approach ensures we can continue to offer enterprise-grade features, strong
 - **Issues**: [GitHub Issues](https://github.com/QAPournima/RiskAnalysis-AI-ML/issues)
 - **Documentation**: [Project Wiki](https://github.com/QAPournima/RiskAnalysis-AI-ML/wiki)
 - **Email**: zapaitool@gmail.com & qapournima@gmail.com 
-- 
+
 ---
 
 **Made with ❤️ for better software quality by Zap⚡️ Team** 
+
+## 🆕 Latest Updates & New Features
+
+### 👤 Profile Sidebar (New!)
+We've completely redesigned the profile management experience with a modern right-sliding sidebar!
+
+**Key Features:**
+- ✨ **Smooth Animations**: Sidebar slides in from the right with elegant cubic-bezier transitions
+- 📱 **Responsive Design**: Perfect experience on desktop, tablet, and mobile devices
+- 🎨 **Modern UI**: Clean, intuitive interface with gradient headers and modern styling
+- 🌙 **Dark Mode Compatible**: Full dark theme support across all profile features
+
+**How to Use:**
+1. Click the **profile icon** in the top-right corner of the dashboard
+2. Select **"Edit Profile"** from the dropdown menu
+3. Watch the **sidebar slide in** smoothly from the right
+4. Use the **two-tab interface**:
+   - 📝 **Edit Profile**: Update name, company name, and role
+   - 🔒 **Change Password**: Secure password change with validation
+5. **Close options**: Click outside, press Escape, or use the × button
+
+### 🔐 Authentication System
+Complete user authentication system with secure login and registration.
+
+**Features:**
+- **User Registration**: Create accounts with email, password, company, and role
+- **Secure Login**: Email/password authentication with session management
+- **Session Management**: 8-hour secure sessions with automatic renewal
+- **Password Security**: Strong password requirements with PBKDF2 hashing
+- **Rate Limiting**: Protection against brute force attacks
+- **Account Lockout**: Security protection with configurable attempt limits
+
+**Getting Started:**
+1. **First Visit**: Navigate to http://localhost:5001/register
+2. **Create Account**: Fill in your details and create a secure password
+3. **Login**: Use your credentials at http://localhost:5001/login
+4. **Dashboard Access**: Automatic redirect to the main dashboard
+
+### 🔒 Security Enhancements
+- **Token-based Authentication**: Cryptographically secure session tokens
+- **Password Hashing**: PBKDF2 with SHA-256 for maximum security
+- **Session Expiration**: Automatic logout after 8 hours of inactivity
+- **Secure Logout**: Clean session termination with confirmation dialog
+- **CSRF Protection**: Cross-site request forgery protection
+- **Rate Limiting**: 5 login attempts per 15 minutes per IP
+
+### 🎨 UI/UX Improvements
+- **Modern Profile Interface**: Sleek sidebar design replacing old modal popups
+- **Enhanced Mobile Experience**: Optimized touch interactions and responsive layouts
+- **Improved Animations**: Smooth transitions and professional animations
+- **Better Error Handling**: Clear error messages and user feedback
+- **Accessibility**: Enhanced keyboard navigation and screen reader support
+
+### 📝 User Experience
+- **Simplified Onboarding**: Streamlined registration and setup process
+- **Real-time Validation**: Instant feedback on form inputs
+- **Success Notifications**: Clear confirmation when actions complete
+- **Context-sensitive Help**: Inline help and tooltips
+- **Keyboard Shortcuts**: Escape key to close modals and sidebars
+
+---
+
+**🚀 Ready to explore the new features? Start with creating your account at http://localhost:5001/register** 
+
+## 🆕 Latest Updates & New Features
+
+### 👤 Profile Sidebar (New!)
+We've completely redesigned the profile management experience with a modern right-sliding sidebar!
+
+**Key Features:**
+- ✨ **Smooth Animations**: Sidebar slides in from the right with elegant cubic-bezier transitions
+- 📱 **Responsive Design**: Perfect experience on desktop, tablet, and mobile devices
+- 🎨 **Modern UI**: Clean, intuitive interface with gradient headers and modern styling
+- 🌙 **Dark Mode Compatible**: Full dark theme support across all profile features
+
+**How to Use:**
+1. Click the **profile icon** in the top-right corner of the dashboard
+2. Select **"Edit Profile"** from the dropdown menu
+3. Watch the **sidebar slide in** smoothly from the right
+4. Use the **two-tab interface**:
+   - 📝 **Edit Profile**: Update name, company name, and role
+   - 🔒 **Change Password**: Secure password change with validation
+5. **Close options**: Click outside, press Escape, or use the × button
+
+### 🔐 Authentication System
+Complete user authentication system with secure login and registration.
+
+**Features:**
+- **User Registration**: Create accounts with email, password, company, and role
+- **Secure Login**: Email/password authentication with session management
+- **Session Management**: 8-hour secure sessions with automatic renewal
+- **Password Security**: Strong password requirements with PBKDF2 hashing
+- **Rate Limiting**: Protection against brute force attacks
+- **Account Lockout**: Security protection with configurable attempt limits
+
+**Getting Started:**
+1. **First Visit**: Navigate to http://localhost:5001/register
+2. **Create Account**: Fill in your details and create a secure password
+3. **Login**: Use your credentials at http://localhost:5001/login
+4. **Dashboard Access**: Automatic redirect to the main dashboard
+
+### �� Security Enhancements
+- **Token-based Authentication**: Cryptographically secure session tokens
+- **Password Hashing**: PBKDF2 with SHA-256 for maximum security
+- **Session Expiration**: Automatic logout after 8 hours of inactivity
+- **Secure Logout**: Clean session termination with confirmation dialog
+- **CSRF Protection**: Cross-site request forgery protection
+- **Rate Limiting**: 5 login attempts per 15 minutes per IP
+
+### 🎨 UI/UX Improvements
+- **Modern Profile Interface**: Sleek sidebar design replacing old modal popups
+- **Enhanced Mobile Experience**: Optimized touch interactions and responsive layouts
+- **Improved Animations**: Smooth transitions and professional animations
+- **Better Error Handling**: Clear error messages and user feedback
+- **Accessibility**: Enhanced keyboard navigation and screen reader support
+
+### 📝 User Experience
+- **Simplified Onboarding**: Streamlined registration and setup process
+- **Real-time Validation**: Instant feedback on form inputs
+- **Success Notifications**: Clear confirmation when actions complete
+- **Context-sensitive Help**: Inline help and tooltips
+- **Keyboard Shortcuts**: Escape key to close modals and sidebars
+
+---
+
+**🚀 Ready to explore the new features? Start with creating your account at http://localhost:5001/register**
+
