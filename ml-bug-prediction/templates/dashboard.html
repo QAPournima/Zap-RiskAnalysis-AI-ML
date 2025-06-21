@@ -2361,10 +2361,10 @@
         .goal-form-input {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid var(--border-color);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            background: var(--card-bg);
+            color: var(--text-color);
             font-size: 1rem;
             transition: all 0.2s ease;
         }
@@ -2373,20 +2373,19 @@
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-            background: rgba(255, 255, 255, 0.15);
         }
 
         .goal-form-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: #9ca3af;
         }
 
         .goal-form-select {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid var(--border-color);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            background: var(--card-bg);
+            color: var(--text-color);
             font-size: 1rem;
             transition: all 0.2s ease;
         }
@@ -2398,16 +2397,64 @@
         }
 
         .goal-form-select option {
-            background: #1e293b;
-            color: white;
+            background: var(--card-bg);
+            color: var(--text-color);
         }
 
         .goal-form-label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #cbd5e1;
+            color: var(--text-color);
             font-weight: 600;
             font-size: 0.9rem;
+        }
+        
+        /* Light mode form styling */
+        [data-theme="light"] .goal-form-input,
+        [data-theme="light"] .goal-form-select {
+            background: #ffffff;
+            border-color: #d1d5db;
+            color: #1f2937;
+        }
+        
+        [data-theme="light"] .goal-form-input:focus,
+        [data-theme="light"] .goal-form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        [data-theme="light"] .goal-form-label {
+            color: #374151;
+        }
+        
+        [data-theme="light"] .goal-form-input::placeholder {
+            color: #9ca3af;
+        }
+        
+        /* Dark mode form styling */
+        [data-theme="dark"] .goal-form-input,
+        [data-theme="dark"] .goal-form-select {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        [data-theme="dark"] .goal-form-input:focus,
+        [data-theme="dark"] .goal-form-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        [data-theme="dark"] .goal-form-label {
+            color: #cbd5e1;
+        }
+        
+        [data-theme="dark"] .goal-form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        [data-theme="dark"] .goal-form-select option {
+            background: #1e293b;
+            color: white;
         }
 
         .goal-info-box {
@@ -2426,10 +2473,25 @@
         }
 
         .goal-info-text {
-            color: #cbd5e1;
+            color: var(--text-color);
             margin: 0;
             font-size: 0.9rem;
             line-height: 1.4;
+        }
+        
+        /* Light mode info box */
+        [data-theme="light"] .goal-info-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        [data-theme="light"] .goal-info-text {
+            color: #4b5563;
+        }
+        
+        /* Dark mode info box */
+        [data-theme="dark"] .goal-info-text {
+            color: #cbd5e1;
         }
 
         .goal-button-primary {
@@ -2477,14 +2539,104 @@
             justify-content: flex-end;
             margin-top: 2rem;
         }
+        
+        /* Delete Goal Modal Actions */
+        .delete-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-cancel-goal {
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-cancel-goal:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-delete-forever {
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-delete-forever:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        /* Delete warning styling */
+        .delete-warning-card {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .delete-warning-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .delete-warning-icon {
+            font-size: 2.5rem;
+        }
+        
+        .delete-warning-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ef4444;
+            margin-bottom: 0.25rem;
+        }
+        
+        .delete-warning-subtitle {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        /* Light mode delete warning */
+        [data-theme="light"] .delete-warning-card {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+        
+        [data-theme="light"] .delete-warning-title {
+            color: #dc2626;
+        }
+        
+        [data-theme="light"] .delete-warning-subtitle {
+            color: #6b7280;
+        }
 
         /* Progress Update Modal Styling */
         .progress-current-display {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.05);
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
         }
 
         .progress-metric {
@@ -2494,12 +2646,41 @@
         }
 
         .progress-metric-label {
-            color: #94a3b8;
+            color: var(--text-color);
+            opacity: 0.7;
         }
 
         .progress-metric-value {
-            color: #fbbf24;
+            color: #f59e0b;
             font-weight: bold;
+        }
+        
+        /* Light mode progress styling */
+        [data-theme="light"] .progress-current-display {
+            background: #f9fafb;
+            border-color: #e5e7eb;
+        }
+        
+        [data-theme="light"] .progress-metric-label {
+            color: #6b7280;
+        }
+        
+        [data-theme="light"] .progress-metric-value {
+            color: #d97706;
+        }
+        
+        /* Dark mode progress styling */
+        [data-theme="dark"] .progress-current-display {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        [data-theme="dark"] .progress-metric-label {
+            color: #94a3b8;
+        }
+        
+        [data-theme="dark"] .progress-metric-value {
+            color: #fbbf24;
         }
 
         /* Forecast Modal Styling */
@@ -2630,6 +2811,18 @@
             font-size: 0.9em;
             font-weight: 500;
             opacity: 0.95;
+        }
+        
+        /* Ensure tab content doesn't interfere with modals */
+        .tab-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Ensure modals always appear on top */
+        .insights-modal {
+            position: fixed !important;
+            z-index: 99999 !important;
         }           
         
     </style>
@@ -3075,14 +3268,11 @@
                 });
                 console.log('📊 API Response status:', response.status);
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
+                // Always try to read the JSON response, even for error status codes
                 const data = await response.json();
                 console.log('📋 API Response data:', data);
                 
-                if (data.success) {
+                if (response.ok && data.success) {
                     displayResults(data);
                     updateInsights(data);
                     
@@ -3097,7 +3287,11 @@
                         showNotification(`📊 Analysis complete for ${projectName}: ${bugCount} bugs analyzed`, 'success', 3000);
                     }
                 } else {
-                    showError(data.message || 'Unknown error occurred');
+                    // Handle error responses - check if it's a configuration error
+                    const errorMessage = data.message || `HTTP ${response.status}: ${response.statusText}`;
+                    console.log('🔍 Error message received:', errorMessage);
+                    console.log('🔍 Error type:', data.error_type);
+                    showError(errorMessage);
                 }
                 
                 if (!silent) {
@@ -3107,7 +3301,13 @@
             } catch (error) {
                 console.error('❌ Analysis error:', error);
                 if (!silent) {
-                    showError(`Network error: ${error.message}`);
+                    // Check if this looks like a configuration error
+                    const errorMessage = error.message || 'Network error occurred';
+                    if (isConfigurationError(errorMessage)) {
+                        showError(errorMessage);
+                    } else {
+                        showError(`Network error: ${errorMessage}`);
+                    }
                 }
             } finally {
                 // Re-enable the analyze button
@@ -4355,43 +4555,85 @@
         // 🎭 MODAL POPUP SYSTEM
 
         function showPopup(content) {
-            // Remove existing popup if any
-            const existingModal = document.getElementById('insightsModal');
+            console.log('🎯 DEBUG: showPopup() called');
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('goalModal');
             if (existingModal) {
                 existingModal.remove();
             }
             
-            // Create modal HTML
+            // Parse content to extract header title
+            let title = 'Goal Details';
+            const headerMatch = content.match(/<h3[^>]*>([^<]+)<\/h3>/);
+            if (headerMatch) {
+                title = headerMatch[1].replace(/^[🎯📈🗑️🔮]+\s*/, ''); // Remove emojis
+            }
+            
+            // Clean content by removing popup wrapper divs
+            let cleanContent = content;
+            cleanContent = cleanContent.replace(/<div class="popup-header">.*?<\/div>/s, '');
+            cleanContent = cleanContent.replace(/<div class="popup-content">(.*?)<\/div>/s, '$1');
+            
+            // Create simple full-screen modal
             const modal = document.createElement('div');
-            modal.id = 'insightsModal';
-            modal.className = 'insights-modal';
-            modal.innerHTML = `
-                <div class="modal-backdrop" onclick="closePopup()"></div>
-                <div class="modal-container">
-                    <div class="modal-header">
-                        <button class="close-btn" onclick="closePopup()">✕</button>
-                    </div>
-                    <div class="modal-body">
-                        ${content}
-                    </div>
-                </div>
+            modal.id = 'goalModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 100000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
             `;
             
-            // Add to page
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: ${document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff'};
+                padding: 2rem;
+                border-radius: 12px;
+                max-width: 90vw;
+                max-height: 90vh;
+                overflow-y: auto;
+                position: relative;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                color: ${document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#000000'};
+            `;
+            
+            modalContent.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #ccc; padding-bottom: 1rem;">
+                    <h3 style="margin: 0; color: ${document.documentElement.getAttribute('data-theme') === 'dark' ? '#fbbf24' : '#3b82f6'};">${title}</h3>
+                    <button onclick="closePopup()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: ${document.documentElement.getAttribute('data-theme') === 'dark' ? '#ffffff' : '#000000'};">×</button>
+                </div>
+                <div>${cleanContent || '<p>Loading content...</p>'}</div>
+            `;
+            
+            modal.appendChild(modalContent);
             document.body.appendChild(modal);
             
-            // Add animation
-            setTimeout(() => modal.classList.add('show'), 10);
+            // Add click outside to close
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closePopup();
+                }
+            });
             
             // Add escape key handler
             document.addEventListener('keydown', handleEscapeKey);
+            
+            console.log('✅ Modal created and shown');
         }
 
         function closePopup() {
-            const modal = document.getElementById('insightsModal');
+            const modal = document.getElementById('goalModal');
             if (modal) {
-                modal.classList.remove('show');
-                setTimeout(() => modal.remove(), 300);
+                modal.remove();
+                console.log('✅ Modal closed and removed');
             }
             document.removeEventListener('keydown', handleEscapeKey);
         }
@@ -4637,46 +4879,138 @@
                 
 
 
-                /* 🎭 MODAL SYSTEM */
-                .insights-modal {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: 10000;
+                /* 🎭 SIDEBAR SYSTEM */
+                .goal-sidebar {
+                    position: fixed !important;
+                    top: 0 !important;
+                    right: -500px !important;
+                    width: 480px !important;
+                    height: 100vh !important;
+                    z-index: 99999 !important;
+                    background: var(--card-bg);
+                    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+                    transition: right 0.3s ease !important;
+                    overflow-y: auto;
+                    border-left: 1px solid var(--border-color);
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+                
+                .goal-sidebar.show {
+                    right: 0 !important;
+                    transform: translateX(0) !important;
+                }
+                
+                .sidebar-backdrop {
+                    position: fixed !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    background: rgba(0, 0, 0, 0.5) !important;
+                    z-index: 99998 !important;
                     opacity: 0;
                     visibility: hidden;
                     transition: all 0.3s ease;
+                    pointer-events: none;
                 }
                 
-                .insights-modal.show {
+                .sidebar-backdrop.show {
                     opacity: 1;
                     visibility: visible;
+                    pointer-events: all;
                 }
                 
-                .modal-backdrop {
-                    position: absolute;
+                /* Light mode sidebar */
+                [data-theme="light"] .goal-sidebar {
+                    background: #ffffff !important;
+                    border-left: 1px solid #e5e7eb !important;
+                    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1) !important;
+                }
+                
+                /* Dark mode sidebar */
+                [data-theme="dark"] .goal-sidebar {
+                    background: #1e293b !important;
+                    border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5) !important;
+                }
+                
+                /* Mobile responsive */
+                @media (max-width: 768px) {
+                    .goal-sidebar {
+                        width: 100vw !important;
+                        right: -100vw !important;
+                    }
+                    
+                    .sidebar-header {
+                        padding: 1rem !important;
+                    }
+                    
+                    .sidebar-content {
+                        padding: 1rem !important;
+                    }
+                }
+                
+                .sidebar-header {
+                    padding: 1.5rem;
+                    background: var(--card-bg);
+                    border-bottom: 1px solid var(--border-color);
+                    position: sticky;
                     top: 0;
-                    left: 0;
+                    z-index: 100001;
+                    display: flex !important;
+                    justify-content: space-between;
+                    align-items: center;
                     width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.8);
-                    backdrop-filter: blur(4px);
+                    box-sizing: border-box;
                 }
                 
-                .modal-container {
-                    position: relative;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    max-width: 90vw;
-                    max-height: 90vh;
-                    background: linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-                    border-radius: 15px;
-                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    overflow: hidden;
+                .sidebar-header h3 {
+                    margin: 0;
+                    color: var(--text-color);
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    display: block !important;
+                }
+                
+                .sidebar-content {
+                    padding: 1.5rem;
+                    background: var(--card-bg);
+                    min-height: calc(100vh - 80px);
+                    display: block !important;
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+                
+                /* Light mode sidebar content */
+                [data-theme="light"] .sidebar-header {
+                    background: #ffffff !important;
+                    border-bottom: 1px solid #e5e7eb !important;
+                }
+                
+                [data-theme="light"] .sidebar-header h3 {
+                    color: #1f2937 !important;
+                }
+                
+                [data-theme="light"] .sidebar-content {
+                    background: #ffffff !important;
+                    color: #1f2937 !important;
+                }
+                
+                /* Dark mode sidebar content */
+                [data-theme="dark"] .sidebar-header {
+                    background: #1e293b !important;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                }
+                
+                [data-theme="dark"] .sidebar-header h3 {
+                    color: #fbbf24 !important;
+                }
+                
+                [data-theme="dark"] .sidebar-content {
+                    background: #1e293b !important;
+                    color: #ffffff !important;
                 }
                 
                 .modal-header {
@@ -4686,13 +5020,13 @@
                 }
                 
                 .close-btn {
-                    position: absolute;
-                    top: 1rem;
-                    right: 1rem;
-                    background: none;
-                    border: none;
-                    color: #94a3b8;
-                    font-size: 1.5rem;
+                    position: absolute !important;
+                    top: 1rem !important;
+                    right: 1rem !important;
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    color: var(--text-color);
+                    font-size: 1.2rem;
                     cursor: pointer;
                     width: 32px;
                     height: 32px;
@@ -4701,35 +5035,104 @@
                     align-items: center;
                     justify-content: center;
                     transition: all 0.2s ease;
+                    z-index: 100001 !important;
                 }
                 
                 .close-btn:hover {
+                    background: rgba(255, 255, 255, 0.2);
+                    color: var(--text-color);
+                    transform: scale(1.1);
+                }
+                
+                /* Light mode close button */
+                [data-theme="light"] .close-btn {
+                    background: rgba(0, 0, 0, 0.05);
+                    border-color: rgba(0, 0, 0, 0.1);
+                    color: #374151;
+                }
+                
+                [data-theme="light"] .close-btn:hover {
+                    background: rgba(0, 0, 0, 0.1);
+                    color: #1f2937;
+                }
+                
+                /* Dark mode close button */
+                [data-theme="dark"] .close-btn {
                     background: rgba(255, 255, 255, 0.1);
+                    border-color: rgba(255, 255, 255, 0.2);
+                    color: #d1d5db;
+                }
+                
+                [data-theme="dark"] .close-btn:hover {
+                    background: rgba(255, 255, 255, 0.2);
                     color: white;
                 }
                 
                 .modal-body {
                     padding: 0;
-                    max-height: calc(90vh - 80px);
+                    max-height: calc(85vh - 80px);
                     overflow-y: auto;
+                    color: var(--text-color);
+                }
+                
+                /* Light mode modal text */
+                [data-theme="light"] .modal-body {
+                    color: #1f2937;
+                }
+                
+                /* Dark mode modal text */
+                [data-theme="dark"] .modal-body {
                     color: white;
                 }
                 
-                /* 📊 POPUP CONTENT STYLING */
+                                /* 📊 POPUP CONTENT STYLING */
                 .popup-header {
                     padding: 1.5rem;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    padding-right: 3rem; /* Space for close button */
+                    border-bottom: 1px solid var(--border-color);
+                    background: var(--card-bg);
                 }
-                
+
                 .popup-header h3 {
                     margin: 0;
-                    color: #fbbf24;
+                    color: var(--text-color);
                     font-size: 1.5rem;
                     font-weight: 700;
                 }
-                
+
                 .popup-content {
                     padding: 1.5rem;
+                    background: var(--card-bg);
+                }
+                
+                /* Light mode popup header */
+                [data-theme="light"] .popup-header {
+                    background: #ffffff !important;
+                    border-bottom-color: #e5e7eb !important;
+                }
+                
+                [data-theme="light"] .popup-header h3 {
+                    color: #1f2937 !important;
+                }
+                
+                [data-theme="light"] .popup-content {
+                    background: #ffffff !important;
+                    color: #1f2937 !important;
+                }
+                
+                /* Dark mode popup header */
+                [data-theme="dark"] .popup-header {
+                    background: #1e293b !important;
+                    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+                }
+                
+                [data-theme="dark"] .popup-header h3 {
+                    color: #fbbf24 !important;
+                }
+                
+                [data-theme="dark"] .popup-content {
+                    background: #1e293b !important;
+                    color: #ffffff !important;
                 }
                 
                 /* 🎯 HEALTH SCORE POPUP */
@@ -6247,10 +6650,16 @@
                 'your-email@company.com',
                 'placeholder values',
                 'http 404',
+                'http 405',
+                'http 400',
+                'method not allowed',
+                'bad request',
                 'page not found',
                 'authentication',
                 'unauthorized',
                 '401',
+                '405',
+                '400',
                 'not configured',
                 'jira server not found',
                 'connection failed',
@@ -6262,7 +6671,12 @@
                 'please add project',
                 'no projects configured',
                 'configure projects',
-                'setup required'
+                'setup required',
+                'api endpoint not found',
+                'endpoint not implemented',
+                'missing api endpoint',
+                'error_type',
+                'configuration_required'
             ];
             
             const lowerMessage = message.toLowerCase();
@@ -6285,7 +6699,7 @@
                         <div style="font-size: 4rem; margin-bottom: 1.5rem;">⚙️</div>
                         <h3 style="color: #856404; margin-bottom: 1rem;">Project Configuration Required</h3>
                         <p style="font-size: 1.2rem; color: #6c757d; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                            To start with Risk Analysis, you need to configure your JIRA connection and add projects first.
+                            To start using the Risk Analysis Dashboard, you need to configure your JIRA connection and add projects first. The analysis APIs are not available until proper configuration is completed.
                         </p>
                         
                         <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 12px; padding: 2rem; margin: 2rem auto; max-width: 700px; text-align: left;">
@@ -6331,6 +6745,14 @@
                             <p style="color: #721c24; margin: 0; font-size: 0.9rem;">Your JIRA credentials appear to be invalid or expired. Please update your settings.</p>
                         </div>
                         ` : ''}
+                        
+                        <div style="background: #e7f3ff; border: 1px solid #bee5eb; border-radius: 8px; padding: 1.5rem; margin: 2rem auto; max-width: 600px; text-align: left;">
+                            <h6 style="color: #0c5460; margin-bottom: 1rem;">🧪 Test Server Notice:</h6>
+                            <p style="color: #0c5460; margin: 0; font-size: 0.9rem;">
+                                You're currently using the simplified test server which provides forgot password functionality. 
+                                To access full dashboard analysis features, you'll need to configure the main application server with your JIRA credentials and project settings.
+                            </p>
+                        </div>
                         
                         <p style="margin-top: 2rem; font-size: 0.9rem; color: #6c757d;">
                             💬 Need help? Check the Settings page for detailed configuration instructions and troubleshooting.
@@ -6661,15 +7083,39 @@
                 const response = await fetch(`/api/trends/${projectId}?months=${months}`);
                 const data = await response.json();
                 
-                if (data.success) {
+                if (response.ok && data.success) {
                     displayTrends(data);
                     console.log(`✅ Trends data loaded for ${data.project_name} (${data.months_analyzed} months)`);
                 } else {
-                    container.innerHTML = `<p>❌ ${data.message}</p>`;
-                    console.warn(`⚠️ Trends loading failed for ${projectId}: ${data.message}`);
+                    // Check if it's a configuration error for trends too
+                    const errorMessage = data.message || `HTTP ${response.status}: ${response.statusText}`;
+                    if (isConfigurationError(errorMessage)) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: #6c757d;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">⚙️</div>
+                                <h4>Trends Analysis Requires Configuration</h4>
+                                <p>Historical trend analysis requires JIRA connection setup.</p>
+                                <p><a href="/settings" target="_blank" class="btn btn-primary" style="margin-top: 1rem;">Configure Settings</a></p>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `<p>❌ ${errorMessage}</p>`;
+                    }
+                    console.warn(`⚠️ Trends loading failed for ${projectId}: ${errorMessage}`);
                 }
             } catch (error) {
-                container.innerHTML = `<p>❌ Error loading trends: ${error.message}</p>`;
+                const errorMessage = error.message || 'Network error occurred';
+                if (isConfigurationError(errorMessage)) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #6c757d;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚙️</div>
+                            <h4>Configuration Required</h4>
+                            <p>Please configure your JIRA connection first.</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<p>❌ Error loading trends: ${errorMessage}</p>`;
+                }
                 console.error(`❌ Trends API error for ${projectId}:`, error);
             } finally {
                 if (!silent && loading) {
@@ -8584,17 +9030,14 @@
                     console.log('🔄 Using selected project from dropdown:', projectSelect.value);
                     currentProject = projectSelect.value;  // This includes "ALL" for Aircall Projects
                 } else {
-                    showNotification('Please select a project from the dropdown first', 'warning');
+                    showNotification('Please select a project first', 'warning');
                     return;
                 }
             }
             
-            // For goal tracking, "ALL" (Aircall Projects) is perfectly valid
-            console.log('🎯 Goal tracking will use project:', currentProject);
-            
-            showGoalsLoading();
-            
             try {
+                console.log('🚀 Calling API to initialize goals for:', currentProject);
+                
                 const response = await fetch(`/api/goals/${currentProject}/initialize`, {
                     method: 'POST',
                     headers: {
@@ -8605,16 +9048,15 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    showNotification(`🎯 ${data.message}`, 'success');
+                    showNotification(data.message, 'success');
+                    // Reload the goals dashboard
                     await loadGoalsDashboard();
                 } else {
                     showNotification(`Error: ${data.message}`, 'error');
-                    hideGoalsLoading();
                 }
             } catch (error) {
                 console.error('❌ Error initializing goals:', error);
                 showNotification('Error initializing goals', 'error');
-                hideGoalsLoading();
             }
         }
         
@@ -8914,7 +9356,7 @@
                 </div>
                 <div class="popup-content">
                     <div style="margin-bottom: 1.5rem;">
-                        <p style="color: #cbd5e1; margin-bottom: 1rem;">Enter the new current value to update your progress:</p>
+                        <p style="color: var(--text-color); opacity: 0.8; margin-bottom: 1rem;">Enter the new current value to update your progress:</p>
                         
                         <div class="progress-current-display">
                             <div class="progress-metric">
@@ -9153,71 +9595,71 @@
         }
         
         function createNewGoal() {
+            console.log('🎯 Creating new goal...');
+            
             const content = `
                 <div class="popup-header">
                     <h3>🎯 Create New Goal</h3>
                 </div>
                 <div class="popup-content">
                     <div style="margin-bottom: 2rem;">
-                        <p style="color: #cbd5e1; margin-bottom: 1.5rem;">Create a smart goal with automatic progress tracking and achievement rewards.</p>
+                        <p style="color: var(--text-color); opacity: 0.8; margin-bottom: 1.5rem;">Create a smart goal with automatic progress tracking and achievement rewards.</p>
                         
-                                                 <!-- Goal Type Selection -->
-                         <div style="margin-bottom: 1.5rem;">
-                             <label class="goal-form-label">Goal Type:</label>
-                             <select id="goalTypeSelect" class="goal-form-select" onchange="updateGoalDescription()">
-                                 <option value="">Select goal type...</option>
-                                 <option value="bug_reduction">🐛 Bug Reduction - Reduce number of bugs</option>
-                                 <option value="health_improvement">💚 Health Improvement - Improve project health score</option>
-                                 <option value="component_stability">🔧 Component Stability - Improve component reliability</option>
-                             </select>
-                         </div>
-                         
-                         <!-- Goal Description -->
-                         <div id="goalDescription" class="goal-info-box" style="display: none;">
-                             <div class="goal-info-header">
-                                 <span style="font-size: 1.2rem;">💡</span>
-                                 <span style="color: #93c5fd; font-weight: 600;">Goal Description</span>
-                             </div>
-                             <p id="goalDescriptionText" class="goal-info-text"></p>
-                         </div>
-                         
-                         <!-- Goal Title -->
-                         <div style="margin-bottom: 1.5rem;">
-                             <label class="goal-form-label">Goal Title:</label>
-                             <input type="text" id="goalTitleInput" class="goal-form-input" 
-                                    placeholder="e.g., Reduce Android bugs by 50%">
-                         </div>
-                         
-                         <!-- Current and Target Values -->
-                         <div class="goal-grid-inputs">
-                             <div>
-                                 <label class="goal-form-label">Current Value:</label>
-                                 <input type="number" id="currentValueInput" class="goal-form-input"
-                                        placeholder="Current state" step="0.1">
-                             </div>
-                             <div>
-                                 <label class="goal-form-label">Target Value:</label>
-                                 <input type="number" id="targetValueInput" class="goal-form-input"
-                                        placeholder="Target goal" step="0.1">
-                             </div>
-                         </div>
-                         
-                         <!-- Target Date -->
-                         <div style="margin-bottom: 2rem;">
-                             <label class="goal-form-label">Target Date:</label>
-                             <input type="date" id="targetDateInput" class="goal-form-input"
-                                    min="${new Date().toISOString().split('T')[0]}">
-                         </div>
-                         
-                         <!-- Action Buttons -->
-                         <div class="goal-actions">
-                             <button class="goal-button-secondary" onclick="closePopup()">
-                                 Cancel
-                             </button>
-                             <button id="createGoalBtn" class="goal-button-primary" onclick="submitNewGoal()">
-                                 🎯 Create Goal
-                             </button>
-                         </div>
+                        <!-- Goal Type Selection -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label class="goal-form-label">Goal Type:</label>
+                            <select id="goalTypeSelect" class="goal-form-select" onchange="updateGoalDescription()">
+                                <option value="">Select goal type...</option>
+                                <option value="bug_reduction">🐛 Bug Reduction</option>
+                                <option value="health_improvement">🏥 Health Score Improvement</option>
+                                <option value="component_stability">🧩 Component Stability</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Goal Description -->
+                        <div id="goalDescription" style="display: none; margin-bottom: 1.5rem;">
+                            <div class="goal-info-box">
+                                <div class="goal-info-header">
+                                    <span style="font-size: 1.2rem;">💡</span>
+                                    <span style="color: #93c5fd; font-weight: 600;">Goal Type Information</span>
+                                </div>
+                                <p id="goalDescriptionText" class="goal-info-text"></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Goal Title -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label class="goal-form-label">Goal Title:</label>
+                            <input type="text" id="goalTitleInput" class="goal-form-input" placeholder="Enter a descriptive title for your goal...">
+                        </div>
+                        
+                        <!-- Current and Target Values -->
+                        <div class="goal-grid-inputs">
+                            <div>
+                                <label class="goal-form-label">Current Value:</label>
+                                <input type="number" id="currentValueInput" class="goal-form-input" placeholder="Current value" step="0.1">
+                            </div>
+                            <div>
+                                <label class="goal-form-label">Target Value:</label>
+                                <input type="number" id="targetValueInput" class="goal-form-input" placeholder="Target value" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <!-- Target Date -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label class="goal-form-label">Target Date:</label>
+                            <input type="date" id="targetDateInput" class="goal-form-input" min="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="goal-actions">
+                            <button class="goal-button-secondary" onclick="closePopup()">
+                                Cancel
+                            </button>
+                            <button class="goal-button-primary" onclick="submitNewGoal()">
+                                🎯 Create Goal
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -9380,10 +9822,10 @@
                         
                         <!-- Consequences -->
                         <div style="margin-bottom: 1.5rem;">
-                            <p style="color: #cbd5e1; margin-bottom: 1rem; line-height: 1.4;">
+                            <p style="color: var(--text-color); opacity: 0.9; margin-bottom: 1rem; line-height: 1.4;">
                                 Are you sure you want to permanently delete this goal? This will also remove:
                             </p>
-                            <ul style="color: #94a3b8; margin: 0; padding-left: 1.5rem;">
+                            <ul style="color: var(--text-color); opacity: 0.7; margin: 0; padding-left: 1.5rem;">
                                 <li>All progress tracking history</li>
                                 <li>Associated achievement badges</li>
                                 <li>Milestone records</li>
@@ -9397,8 +9839,8 @@
                                 <span style="font-size: 1.2rem;">💡</span>
                                 <span style="color: #93c5fd; font-weight: 600;">Alternative Option</span>
                             </div>
-                            <p style="color: #cbd5e1; margin: 0; font-size: 0.9rem;">
-                                Consider canceling the goal instead to preserve its history while marking it as inactive.
+                            <p style="color: var(--text-color); opacity: 0.8; margin: 0; font-size: 0.9rem;">
+                                Consider archiving the goal instead to preserve its history while marking it as inactive.
                             </p>
                         </div>
                         
@@ -9407,10 +9849,10 @@
                             <button class="goal-button-secondary" onclick="closePopup()">
                                 Keep Goal
                             </button>
-                            <button class="btn-cancel" style="padding: 0.75rem 1rem; font-size: 0.9rem;" onclick="cancelGoalAction('${goalId}')">
-                                📋 Cancel Goal
+                            <button class="btn-cancel-goal" onclick="cancelGoalAction('${goalId}')">
+                                📋 Archive Goal
                             </button>
-                            <button class="btn-delete" style="padding: 0.75rem 1rem; font-size: 0.9rem;" onclick="deleteGoalAction('${goalId}')">
+                            <button class="btn-delete-forever" onclick="deleteGoalAction('${goalId}')">
                                 🗑️ Delete Forever
                             </button>
                         </div>
@@ -9511,6 +9953,21 @@
         }
         
         console.log('🎯 Goal Tracking System loaded!');
+        
+        // Add test function for debugging
+        window.testPopup = function() {
+            console.log('🧪 Testing popup system directly...');
+            const content = `
+                <div class="popup-header">
+                    <h3>🧪 Test Popup</h3>
+                </div>
+                <div class="popup-content">
+                    <p>This is a test popup called directly from console!</p>
+                    <button onclick="closePopup()">Close</button>
+                </div>
+            `;
+            showPopup(content);
+        };
         
         function showConfigurationHelp() {
             /**
